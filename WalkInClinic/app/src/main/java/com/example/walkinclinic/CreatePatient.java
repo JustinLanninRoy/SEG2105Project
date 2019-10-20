@@ -48,16 +48,23 @@ public class CreatePatient extends AppCompatActivity {
 
         //check for all fields being entered
         if(checkAllFields()){
-            Toast.makeText(getApplicationContext(),"Please fill in every category",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please fill in every category.",Toast.LENGTH_LONG).show();
+        }
+        else if(checkAlphabet(firstName) || checkAlphabet(lastName)){
+            Toast.makeText(getApplicationContext(), "Please enter a valid name.", Toast.LENGTH_LONG).show();
+        }
+        //check Phone format
+        else if(!checkPhoneValid(Phone)) {
+            Toast.makeText(getApplicationContext(), "Please enter a valid phone number.", Toast.LENGTH_LONG).show();
         }
         //check for valid email address
         else if(!checkEmailValid(Email)){
-            Toast.makeText(getApplicationContext(), "Please enter a valid email", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Please enter a valid email.", Toast.LENGTH_LONG).show();
         }
         //open the postlogin class and display the correct message
         else {
             //creating the string
-            String postLogginString = ("Welcome " + firstName.getText().toString() + "! You are logged-in as a patient");
+            String postLogginString = ("Welcome " + firstName.getText().toString() + "! You are logged-in as a patient.");
 
             //opening the PostLoggin class and sending the message with it
             Intent i = new Intent(this, PostLoggin.class);
@@ -80,6 +87,29 @@ public class CreatePatient extends AppCompatActivity {
         CharSequence s = text.getText().toString();
         //returns true if the text field is just empty
         return TextUtils.isEmpty(s);
+    }
+
+    boolean checkPhoneValid(EditText text){
+        //check that the phone number is only made up of number when the dash is removed.
+        if(!text.getText().toString().trim().replace("-", "").matches("^[0-9]*$")){
+            Toast.makeText(getApplicationContext(), "Please use only numbers.", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        //make sure the phone number is input in the correct format
+        else if(text.getText().toString().trim().length() > 12){
+            Toast.makeText(getApplicationContext(), "Please use XXX-XXX-XXXX format.", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
+
+    boolean checkAlphabet(EditText text){
+        //check to make sure the field only contains letters
+        if(!text.getText().toString().trim().matches("^[a-zA-Z]*$")){
+            Toast.makeText(getApplicationContext(), "Use only letters for name fields.", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
     }
 
     //method to check if any field is left blank. Returns true if anything is checkEmpty = true, return false if everything is filled.

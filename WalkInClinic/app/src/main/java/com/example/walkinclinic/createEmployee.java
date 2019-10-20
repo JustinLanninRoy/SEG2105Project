@@ -48,10 +48,16 @@ public class createEmployee extends AppCompatActivity {
 
 
         if(checkAllFields()){
-            Toast.makeText(getApplicationContext(),"Please fill in every category",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please fill in every category.",Toast.LENGTH_LONG).show();
+        }
+        else if(checkAlphabet(firstName) || checkAlphabet(lastName)){
+            Toast.makeText(getApplicationContext(), "Please enter a valid name.", Toast.LENGTH_LONG).show();
         }
         else if(!checkEmailValid(Email)){
-            Toast.makeText(getApplicationContext(),"Please enter valid email",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please enter valid email.",Toast.LENGTH_LONG).show();
+        }
+        else if(!checkPhoneValid(Phone)){
+            Toast.makeText(getApplicationContext(),"Please enter valid phone number.",Toast.LENGTH_LONG).show();
         }
         else {
             //creating the string
@@ -79,6 +85,29 @@ public class createEmployee extends AppCompatActivity {
         CharSequence s = text.getText().toString();
         //returns true if the text field is just empty
         return TextUtils.isEmpty(s);
+    }
+
+    boolean checkPhoneValid(EditText text){
+        //check that the phone number is only made up of number when the dash is removed.
+        if(!text.getText().toString().trim().replace("-", "").matches("^[0-9]*$")){
+            Toast.makeText(getApplicationContext(), "Please use only numbers.", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        //make sure the phone number is input in the correct format
+        else if(text.getText().toString().trim().length() > 12){
+            Toast.makeText(getApplicationContext(), "Please use XXX-XXX-XXXX format.", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
+
+    boolean checkAlphabet(EditText text){
+        //check to make sure the field only contains letters
+        if(!text.getText().toString().trim().matches("^[a-zA-Z]*$")){
+            Toast.makeText(getApplicationContext(), "Use only letters for name fields.", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
     }
 
     boolean checkAllFields(){
