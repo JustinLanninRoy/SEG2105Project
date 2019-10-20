@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 public class createEmployee extends AppCompatActivity {
@@ -16,47 +18,44 @@ public class createEmployee extends AppCompatActivity {
         setContentView(R.layout.activity_create_employee);
     }
 
+    EditText firstName;
+    EditText lastName;
+    EditText superVisor;
+    EditText Position;
+    EditText Department;
+    EditText employeeNumber;
+    EditText SSN;
+    EditText Email;
+    EditText Phone;
+    EditText userName;
+    EditText userPassword;
+
+
     public void onCreatePatient(View view){
 
-        TextView firstName = (TextView) findViewById(R.id.FirstName);
-        String firstname = firstName.getText().toString().trim();
-
-        TextView lastName = (TextView) findViewById(R.id.LastName);
-        String lastname = lastName.getText().toString().trim();
-
-        TextView superVisor = (TextView) findViewById(R.id.supervisor);
-        String supervisor = superVisor.getText().toString().trim();
-
-        TextView Position = (TextView) findViewById(R.id.position);
-        String position = Position.getText().toString().trim();
-
-        TextView Department = (TextView) findViewById(R.id.department);
-        String department = Department.getText().toString().trim();
-
-        TextView employeeNumber = (TextView) findViewById(R.id.employeeNumber);
-        String employeenumber = employeeNumber.getText().toString().trim();
-
-        TextView SSN = (TextView) findViewById(R.id.ssn);
-        String ssn = SSN.getText().toString().trim();
-
-        TextView Email = (TextView) findViewById(R.id.Email);
-        String email = Email.getText().toString().trim();
-
-        TextView Phone = (TextView) findViewById(R.id.phoneNumber);
-        String phone = Phone.getText().toString().trim();
-
-        TextView userName = (TextView) findViewById(R.id.username);
-        String username = userName.getText().toString().trim();
-
-        TextView userPassword = (TextView) findViewById(R.id.password);
-        String userpassword = userPassword.getText().toString().trim();
+         firstName = findViewById(R.id.FirstName);
+         lastName = findViewById(R.id.LastName);
+         superVisor = findViewById(R.id.supervisor);
+         Position = findViewById(R.id.position);
+         Department = findViewById(R.id.department);
+         employeeNumber = findViewById(R.id.employeeNumber);
+         SSN = findViewById(R.id.ssn);
+         Email = findViewById(R.id.Email);
+         Phone = findViewById(R.id.phoneNumber);
+         userName = findViewById(R.id.username);
+         userPassword = findViewById(R.id.password);
 
 
-        if(firstname.equalsIgnoreCase("") || lastname.equalsIgnoreCase("") || username.equalsIgnoreCase("") || userpassword.equalsIgnoreCase("") || employeenumber.equalsIgnoreCase("") || ssn.equalsIgnoreCase("") || email.equalsIgnoreCase("") || phone.equalsIgnoreCase("") ||supervisor.equalsIgnoreCase("") || department.equalsIgnoreCase("") || position.equalsIgnoreCase("")){
+
+        if(checkAllFields()){
             Toast.makeText(getApplicationContext(),"Please fill in every category",Toast.LENGTH_LONG).show();
-        } else {
+        }
+        else if(!checkEmailValid(Email)){
+            Toast.makeText(getApplicationContext(),"Please enter valid email",Toast.LENGTH_LONG).show();
+        }
+        else {
             //creating the string
-            String postLogginString = ("Welcome " + firstname + "! You are logged-in as an Employee");
+            String postLogginString = ("Welcome " + firstName.getText().toString().trim() + "! You are logged-in as an Employee");
 
             //opening the PostLoggin class and sending the message with it
             Intent i = new Intent(this, PostLoggin.class);
@@ -65,6 +64,59 @@ public class createEmployee extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
         }
 
+    }
 
+    boolean checkEmailValid(EditText text){
+        //getting email as a CharSequence because patterns matcher takes a CharSequence
+        CharSequence emailString = text.getText().toString().trim();
+        //checking that the email isn't null and that the email matches the PATTERN of an email
+        //this returns true if the email field has something written in it and it looks like an email
+        return(Patterns.EMAIL_ADDRESS.matcher(emailString).matches());
+    }
+
+    boolean checkEmpty(EditText text){
+        //get the inside of the text field being checked
+        CharSequence s = text.getText().toString();
+        //returns true if the text field is just empty
+        return TextUtils.isEmpty(s);
+    }
+
+    boolean checkAllFields(){
+        if(checkEmpty(firstName)){
+            return true;
+        }
+        else if(checkEmpty(lastName)){
+            return true;
+        }
+        else if (checkEmpty(superVisor)) {
+            return true;
+        }
+        else if (checkEmpty(Position)){
+            return true;
+        }
+        else if (checkEmpty(Department)){
+            return true;
+        }
+        else if(checkEmpty(employeeNumber)){
+            return true;
+        }
+        else if(checkEmpty(SSN)){
+            return true;
+        }
+        else if (checkEmpty(Email)){
+            return true;
+        }
+        else if (checkEmpty(Phone)){
+            return true;
+        }
+        else if (checkEmpty(userName)){
+            return true;
+        }
+        else if (checkEmpty(userPassword)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

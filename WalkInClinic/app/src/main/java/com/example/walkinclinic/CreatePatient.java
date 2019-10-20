@@ -32,7 +32,6 @@ public class CreatePatient extends AppCompatActivity {
     EditText userName;
     EditText userPassword;
 
-    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     public void onCreatePatient(View view){
 
