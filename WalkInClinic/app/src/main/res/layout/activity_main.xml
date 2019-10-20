@@ -6,354 +6,228 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/lime" />
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            app:srcCompat="@drawable/white" />
-
         <LinearLayout
-            android:id="@+id/page"
+            android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="0.93"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/logo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/instructions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.93"
-                android:orientation="vertical">
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/logo" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/instructions"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1.1"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/txtViewLoggingInstructions"
-                        android:layout_width="350dp"
-                        android:layout_height="wrap_content"
-                        android:text="Welcome your Vital Care App. In this window you are asked to first choose which type of user you are and then either log in by inputting your information or press the 'create account' button in order to begin with the proccess" />
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/buttons"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.97"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="8"
-                        android:orientation="horizontal">
-
-                        <Space
-                            android:layout_width="270dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <RadioGroup
-                            android:id="@+id/AccountType"
-                            android:layout_width="350dp"
-                            android:layout_height="match_parent">
-
-                            <RadioButton
-                                android:id="@+id/Patient"
-                                android:layout_width="225dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:checked="true"
-                                android:text="@string/rbtPatient" />
-
-                            <RadioButton
-                                android:id="@+id/Employee"
-                                android:layout_width="225dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/rbtEmployee" />
-
-                            <RadioButton
-                                android:id="@+id/Admin"
-                                android:layout_width="225dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/rbtAdmin" />
-
-                        </RadioGroup>
-
-                        <Space
-                            android:layout_width="20dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:onClick="onCreateAccount"
-                        android:text="@string/btnCreateAccount" />
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
+                android:orientation="horizontal">
 
                 <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1.1"
-                android:orientation="vertical">
-
-                <Space
-                    android:layout_width="match_parent"
+                    android:layout_width="20dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6" />
+                    android:layout_weight="1" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="8"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <EditText
-                        android:id="@+id/txtEditUsername"
-                        android:layout_width="350dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:hint="@string/txtEditUsername"
-                        android:inputType="textPersonName" />
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/txtViewUsername"
-                        android:layout_width="350dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/txtViewUsername"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1.1"
-                android:orientation="vertical">
-
-                <Space
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txtViewLoggingInstructions"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="8"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <EditText
-                        android:id="@+id/txtEditPassword"
-                        android:layout_width="350dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:hint="@string/txtEditPassword"
-                        android:inputType="textPersonName"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/txtViewPassword"
-                        android:layout_width="350dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/txtViewPassword"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="Welcome your Vital Care App. In this window you are asked to first choose which type of user you are and then either log in by inputting your information or press the 'create account' button in order to begin with the proccess."
+                    android:textAlignment="center" />
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/log-gin"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1.13"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="10dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="onLoggin"
-                        android:text="@string/btnLoggin" />
-
-                    <Space
-                        android:layout_width="10dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-            </LinearLayout>
         </LinearLayout>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/AccountType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/Patient"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="@string/rbtPatient" />
+
+                    <RadioButton
+                        android:id="@+id/Employee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/rbtEmployee" />
+
+                    <RadioButton
+                        android:id="@+id/Admin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/rbtAdmin" />
+
+                </RadioGroup>
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="onCreateAccount"
+                    android:text="@string/btnCreateAccount" />
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_weight="1.1"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="6" />
+
+            <EditText
+                android:id="@+id/txtEditUsername"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/txtEditUsername"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/txtViewUsername"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/txtViewUsername"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_weight="1.1"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="6" />
+
+            <EditText
+                android:id="@+id/txtEditPassword"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/txtEditPassword"
+                android:inputType="textPersonName"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/txtViewPassword"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/txtViewPassword"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/log-gin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1.13"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:onClick="onLoggin"
+                android:text="@string/btnLoggin" />
+
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
