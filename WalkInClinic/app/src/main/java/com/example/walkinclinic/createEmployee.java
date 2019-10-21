@@ -20,26 +20,15 @@ public class createEmployee extends AppCompatActivity {
 
     EditText firstName;
     EditText lastName;
-    EditText superVisor;
-    EditText Position;
-    EditText Department;
-    EditText employeeNumber;
-    EditText SSN;
     EditText Email;
     EditText Phone;
     EditText userName;
     EditText userPassword;
 
-
     public void onCreatePatient(View view){
 
          firstName = findViewById(R.id.FirstName);
          lastName = findViewById(R.id.LastName);
-         superVisor = findViewById(R.id.supervisor);
-         Position = findViewById(R.id.position);
-         Department = findViewById(R.id.department);
-         employeeNumber = findViewById(R.id.employeeNumber);
-         SSN = findViewById(R.id.ssn);
          Email = findViewById(R.id.Email);
          Phone = findViewById(R.id.phoneNumber);
          userName = findViewById(R.id.username);
@@ -53,11 +42,13 @@ public class createEmployee extends AppCompatActivity {
         else if(checkAlphabet(firstName) || checkAlphabet(lastName)){
             Toast.makeText(getApplicationContext(), "Please enter a valid name.", Toast.LENGTH_LONG).show();
         }
+        //check email format
         else if(!checkEmailValid(Email)){
-            Toast.makeText(getApplicationContext(),"Please enter valid email.",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Please enter a valid email.", Toast.LENGTH_LONG).show();
         }
-        else if(!checkPhoneValid(Phone)){
-            Toast.makeText(getApplicationContext(),"Please enter valid phone number.",Toast.LENGTH_LONG).show();
+        //check phone format
+        else if(!checkPhoneValid(Phone)) {
+            Toast.makeText(getApplicationContext(), "Please use only numbers and XXX-XXX-XXXX format.", Toast.LENGTH_LONG).show();
         }
         else {
             //creating the string
@@ -89,22 +80,15 @@ public class createEmployee extends AppCompatActivity {
 
     boolean checkPhoneValid(EditText text){
         //check that the phone number is only made up of number when the dash is removed.
-        if(!text.getText().toString().trim().replace("-", "").matches("^[0-9]*$")){
-            Toast.makeText(getApplicationContext(), "Please use only numbers.", Toast.LENGTH_LONG).show();
-            return true;
+        if(!text.getText().toString().trim().replace("-", "").matches("[0-9]+") || text.getText().toString().trim().length() != 12){
+            return false;
         }
-        //make sure the phone number is input in the correct format
-        else if(text.getText().toString().trim().length() > 12){
-            Toast.makeText(getApplicationContext(), "Please use XXX-XXX-XXXX format.", Toast.LENGTH_LONG).show();
-            return true;
-        }
-        return false;
+        return true;
     }
 
     boolean checkAlphabet(EditText text){
         //check to make sure the field only contains letters
         if(!text.getText().toString().trim().matches("^[a-zA-Z]*$")){
-            Toast.makeText(getApplicationContext(), "Use only letters for name fields.", Toast.LENGTH_LONG).show();
             return true;
         }
         return false;
@@ -115,21 +99,6 @@ public class createEmployee extends AppCompatActivity {
             return true;
         }
         else if(checkEmpty(lastName)){
-            return true;
-        }
-        else if (checkEmpty(superVisor)) {
-            return true;
-        }
-        else if (checkEmpty(Position)){
-            return true;
-        }
-        else if (checkEmpty(Department)){
-            return true;
-        }
-        else if(checkEmpty(employeeNumber)){
-            return true;
-        }
-        else if(checkEmpty(SSN)){
             return true;
         }
         else if (checkEmpty(Email)){
