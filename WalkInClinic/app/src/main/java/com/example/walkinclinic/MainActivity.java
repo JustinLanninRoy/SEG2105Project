@@ -80,18 +80,18 @@ public class MainActivity extends AppCompatActivity {
         String type = selectedRadioButtonAccount.getText().toString().trim();
 
         //selecting the correct window to open
-        if(type.equalsIgnoreCase("patient")){
-            Intent i = new Intent(this, CreatePatient.class);
+        if(type.equalsIgnoreCase("Patient")){
+            Intent i = new Intent(this, Patient.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"Logged-In",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"New Patient Account",Toast.LENGTH_LONG).show();
         }
         if(type.equalsIgnoreCase("Admin")){
-            Toast.makeText(getApplicationContext(),"New Admin account cannot be made please select Patient before creating a new account",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"New Admin account cannot be made please select Patient or Employee before creating a new account",Toast.LENGTH_LONG).show();
         }
         if(type.equalsIgnoreCase( "Employee")){
-            Intent i = new Intent(this, createEmployee.class);
+            Intent i = new Intent(this, Employee.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"Logged-In",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"New Employee Account",Toast.LENGTH_LONG).show();
         }
     }
 }
