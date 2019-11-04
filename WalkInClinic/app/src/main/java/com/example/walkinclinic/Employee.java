@@ -1,79 +1,30 @@
 package com.example.walkinclinic;
 
-import androidx.appcompat.app.AppCompatActivity;
+public class Employee {
+    private String fName;
+    private String lName;
+    private int employeeNum;
+    private String position;
+    private String supervisor;
+    private boolean fullTime;
+    private String email;
+    private String phone;
+    private String user;
+    private String password;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Patterns;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+    public Employee(){
 
-
-public class Employee extends Person {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_employee);
     }
-
-    public void onCreatePerson(View view){
-        super.onCreatePerson(view);
-    }
-
-    @Override
-    void openPostLoggin() {
-        //creating the string
-        String postLogginString = ("Welcome " + firstName.getText().toString() + "! You are logged-in as an Employee.");
-        //opening the PostLoggin class and sending the message with it
-        Intent i = new Intent(this, PostLoggin.class);
-        i.putExtra("message", postLogginString);
-        startActivity(i);
-        Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
-    }
-
-    boolean checkEmailValid(EditText text){
-        return super.checkEmailValid(text);
-    }
-
-    boolean checkEmpty(EditText text){
-        return super.checkEmpty(text);
-    }
-
-    boolean checkPhoneValid(EditText text){
-        return super.checkPhoneValid(text);
-    }
-
-    boolean checkAlphabet(EditText text){
-        return super.checkAlphabet(text);
-    }
-
-    //method to check if any field is left blank. Returns true if anything is checkEmpty = true, return false if everything is filled.
-    boolean checkAllFields(){
-        if(checkEmpty(firstName)){
-            return true;
-        }
-        else if(checkEmpty(lastName)){
-            return true;
-        }
-        else if (checkEmpty(Email)){
-            return true;
-        }
-        else if (checkEmpty(Phone)){
-            return true;
-        }
-        else if (checkEmpty(userName)){
-            return true;
-        }
-        else if (checkEmpty(userPassword)){
-            return true;
-        }
-        else{
-            return false;
-        }
+    public Employee(String first, String last, int eNum, String pos, String superv, boolean time, String mail, String phoneNum, String userName, String pass){
+        fName = first;
+        lName = last;
+        employeeNum = eNum;
+        position = pos;
+        supervisor = superv;
+        fullTime= time;
+        email = mail;
+        phone = phoneNum;
+        user = userName;
+        password = pass;
     }
 }

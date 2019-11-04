@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/page"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,36 +36,19 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/instructions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.1"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Space
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/txtViewLoggingInstructions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="Welcome your Vital Care App. In this window you are asked to first choose which type of user you are and then either log in by inputting your information or press the 'create account' button in order to begin with the proccess."
-                    android:textAlignment="center" />
-                android:layout_width="20dp"
+            <TextView
+                android:id="@+id/txtViewLoggingInstructions"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
-            </LinearLayout>
-
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="Welcome your Vital Care App. In this window you are asked to first choose which type of user you are and then either log in by inputting your information or press the 'create account' button in order to begin with the proccess."
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -228,6 +211,7 @@
                 android:text="@string/btnLoggin" />
 
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

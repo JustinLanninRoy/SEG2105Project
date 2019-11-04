@@ -13,9 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".PostLoggin" />
-        <activity android:name=".Patient" />
+        <activity android:name=".CreatePatient" />
+        <activity android:name=".CreateEmployee" />
         <activity android:name=".Employee" />
-        <activity android:name=".Person" />
+        <activity android:name=".Patient" />
+        <activity android:name=".CreatePerson" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

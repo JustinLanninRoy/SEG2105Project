@@ -1,17 +1,16 @@
 package com.example.walkinclinic;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import java.lang.String;
-import android.os.Bundle;
-import android.widget.Toast;
 
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         //selecting the correct window to open
         if(type.equalsIgnoreCase("Patient")){
-            Intent i = new Intent(this, Patient.class);
+            Intent i = new Intent(this, CreatePatient.class);
             startActivity(i);
             Toast.makeText(getApplicationContext(),"New Patient Account",Toast.LENGTH_LONG).show();
         }
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"New Admin account cannot be made please select Patient or Employee before creating a new account",Toast.LENGTH_LONG).show();
         }
         if(type.equalsIgnoreCase( "Employee")){
-            Intent i = new Intent(this, Employee.class);
+            Intent i = new Intent(this, CreateEmployee.class);
             startActivity(i);
             Toast.makeText(getApplicationContext(),"New Employee Account",Toast.LENGTH_LONG).show();
         }

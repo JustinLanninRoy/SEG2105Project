@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Employee">
+    tools:context=".CreateEmployee">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,20 +82,18 @@
 
                 <EditText
                     android:id="@+id/employeeNumber"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:ems="10"
+                    android:layout_weight="1"
                     android:hint="@string/txtEditEmployeeNumber"
                     android:inputType="textPersonName" />
 
                 <EditText
-                    android:id="@+id/ssn"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/position"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:ems="10"
-                    android:hint="@string/txtEditSocialInsurance"
+                    android:layout_weight="1"
+                    android:hint="@string/txtEditPosition"
                     android:inputType="textPersonName" />
 
             </LinearLayout>
@@ -107,17 +105,16 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/position"
+                    android:id="@+id/supervisor"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/txtEditPosition"
+                    android:hint="@string/txtEditSuperVisor"
                     android:inputType="textPersonName" />
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <RadioButton
@@ -135,32 +132,6 @@
                         android:text="@string/rbtFullTime" />
 
                 </RadioGroup>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/supervisor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:ems="10"
-                    android:hint="@string/txtEditSuperVisor"
-                    android:inputType="textPersonName" />
-
-                <EditText
-                    android:id="@+id/department"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:ems="10"
-                    android:hint="@string/txtEditDepartment"
-                    android:inputType="textPersonName" />
 
             </LinearLayout>
 
