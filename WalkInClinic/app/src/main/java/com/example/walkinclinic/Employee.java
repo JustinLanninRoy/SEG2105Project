@@ -1,27 +1,29 @@
 package com.example.walkinclinic;
 
 public class Employee {
-    private String fName;
-    private String lName;
-    private int employeeNum;
-    private String position;
-    private String supervisor;
-    private boolean fullTime;
-    private String email;
-    private String phone;
-    private String user;
-    private String password;
+    public String fName;
+    public String lName;
+    public int employeeNum;
+    public String position;
+    public String supervisor;
+    public String _time;
+    public String email;
+    public String phone;
+    public String user;
+    public String password;
+    public String _iD;
 
     public Employee(){
 
     }
-    public Employee(String first, String last, int eNum, String pos, String superv, boolean time, String mail, String phoneNum, String userName, String pass){
+    public Employee(String id, String first, String last, int eNum, String pos, String superv, String mail, String phoneNum, String userName, String pass, String time){
+        _iD = id;
         fName = first;
         lName = last;
         employeeNum = eNum;
         position = pos;
         supervisor = superv;
-        fullTime= time;
+        _time= time;
         email = mail;
         phone = phoneNum;
         user = userName;

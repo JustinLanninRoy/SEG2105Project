@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/txtEditEmployeeNumber"
-                    android:inputType="textPersonName" />
+                    android:inputType="number" />
 
                 <EditText
                     android:id="@+id/position"
@@ -113,6 +113,7 @@
                     android:inputType="textPersonName" />
 
                 <RadioGroup
+                    android:id="@+id/workTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">

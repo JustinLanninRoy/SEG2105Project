@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,7 @@ public class CreatePatient extends CreatePerson {
     EditText a;
     EditText zip;
     EditText streetAddress;
+    RadioGroup gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +34,51 @@ public class CreatePatient extends CreatePerson {
         setContentView(R.layout.activity_create_patient);
         databasePatients = FirebaseDatabase.getInstance().getReference("patients");
         patients = new ArrayList<>();
+        a = findViewById(R.id.Age);
+        zip = findViewById(R.id.postalCode);
+        streetAddress = findViewById(R.id.StreetAddress);
+        gender = findViewById(R.id.gender);
     }
 
     public void onCreatePerson(View view){
         super.onCreatePerson(view);
-        a = findViewById(R.id.Age);
-        zip = findViewById(R.id.postalCode);
-        streetAddress = findViewById(R.id.StreetAddress);
-        addPatient();
+        if (!checkAllFields()){
+            addPatient();
+        }
+    }
+
+    @Override
+    boolean checkAllFields(){
+        if(checkEmpty(firstName)){
+            return true;
+        }
+        else if(checkEmpty(lastName)){
+            return true;
+        }
+        else if (checkEmpty(Email)){
+            return true;
+        }
+        else if (checkEmpty(Phone)){
+            return true;
+        }
+        else if (checkEmpty(userName)){
+            return true;
+        }
+        else if (checkEmpty(userPassword)){
+            return true;
+        }
+        else if (checkEmpty(a)) {
+            return true;
+        }
+        else if (checkEmpty(zip)){
+            return true;
+        }
+        else if (checkEmpty(streetAddress)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     @Override
@@ -84,8 +124,12 @@ public class CreatePatient extends CreatePerson {
         String user = userName.getText().toString().trim();
         String password = userPassword.getText().toString().trim();
         String id = databasePatients.push().getKey();
-        Patient patient = new Patient(id, fName, lName, address, postalCode, age, email, phone, user, password);
-        databasePatients.child(id).setValue(patient);
+        int selected = gender.getCheckedRadioButtonId();
+        RadioButton chosen = findViewById(selected);
+        String sex = chosen.getText().toString().trim();
+        Patient patient = new Patient(id, fName, lName, address, postalCode, age, email, phone, user, password, sex);
+        patients.add(patient);
+        //databasePatients.child(id).setValue(patient);
     }
 
 }

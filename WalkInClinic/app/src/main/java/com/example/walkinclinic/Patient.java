@@ -11,12 +11,13 @@ public class Patient {
     public String _user;
     public String _password;
     public String _iD;
+    public String _gender;
 
     public Patient(){
 
     }
 
-    public Patient(String id, String first, String last, String add, String zip, int x, String mail, String phoneNum, String userName, String pass){
+    public Patient(String id, String first, String last, String add, String zip, int x, String mail, String phoneNum, String userName, String pass, String gender){
         _iD = id;
         _fName = first;
         _lName = last;
@@ -27,5 +28,6 @@ public class Patient {
         _phone = phoneNum;
         _user = userName;
         _password = pass;
+        _gender = gender;
     }
 }
