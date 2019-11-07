@@ -31,19 +31,9 @@ public class MainActivity extends AppCompatActivity {
         TextView passWord = (TextView) findViewById(R.id.txtEditPassword);
         String password = passWord.getText().toString().trim();
 
-        if(username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("5T5ptQ")){
-            //getting the value of the radio button selected
-            RadioGroup radioAccountTypeGroup = (RadioGroup) findViewById(R.id.AccountType);
-
-            // get selected radio button from radioGroup
-            int selectedId = radioAccountTypeGroup.getCheckedRadioButtonId();
-
-            // find the radiobutton by returned id
-            RadioButton selectedRadioButtonAccount = (RadioButton) findViewById(selectedId);
-            String type = selectedRadioButtonAccount.getText().toString().trim();
-
+        if(username.equals("admin") && password.equals("5T5ptQ")){
             //creating the string
-            String postLogginString = ("Welcome " + username + "! You are logged-in as a " + type);
+            String postLogginString = ("Welcome Admin! You are logged-in.");
 
             //opening the PostLoggin class and sending the message with it
             Intent i = new Intent(this, PostLoggin.class);
@@ -58,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
             setUsername.setText("admin");
             TextView userPassword = (TextView) findViewById(R.id.txtEditPassword);
             userPassword.setText("5T5ptQ");
-
-            //forcefully select admin for now
-            RadioButton Admin = (RadioButton) findViewById(R.id.Admin);
-            Admin.setChecked(true);
         }
     }
 

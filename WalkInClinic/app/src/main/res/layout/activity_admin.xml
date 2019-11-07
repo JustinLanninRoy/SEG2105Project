@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Admin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:forceDarkAllowed="false"
+            android:password="false"
+            android:shadowColor="#000000"
+            android:text="Vital Care Admin"
+            android:textAllCaps="false"
+            android:textColor="#A4CA4C"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/adminInstructions"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Admin can choose whether to view a list of clinics, employees, or patients."
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/clinic"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:onClick="viewClinics"
+            android:text="View Clinics" />
+
+        <Button
+            android:id="@+id/employees"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:onClick="viewEmployees"
+            android:text="View Employees" />
+
+        <Button
+            android:id="@+id/patients"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:onClick="viewPatients"
+            android:text="View Patients" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

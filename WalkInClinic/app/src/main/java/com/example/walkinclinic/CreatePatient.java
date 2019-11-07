@@ -104,7 +104,7 @@ public class CreatePatient extends CreatePerson {
     @Override
     void openPostLoggin() {
         //creating the string
-        String postLogginString = ("Welcome " + firstName.getText().toString() + "! You are logged-in as a Patient.");
+        String postLogginString = ("Welcome Patient " + firstName.getText().toString() + "! You are logged-in.");
         //opening the PostLoggin class and sending the message with it
         Intent i = new Intent(this, PostLoggin.class);
         i.putExtra("message", postLogginString);

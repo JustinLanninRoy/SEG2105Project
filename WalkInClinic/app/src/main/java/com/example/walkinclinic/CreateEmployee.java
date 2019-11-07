@@ -105,7 +105,7 @@ public class CreateEmployee extends CreatePerson {
     @Override
     void openPostLoggin() {
         //creating the string
-        String postLogginString = ("Welcome " + firstName.getText().toString() + "! You are logged-in as an Employee.");
+        String postLogginString = ("Welcome Employee " + firstName.getText().toString() + "! You are logged-in.");
         //opening the PostLoggin class and sending the message with it
         Intent i = new Intent(this, PostLoggin.class);
         i.putExtra("message", postLogginString);

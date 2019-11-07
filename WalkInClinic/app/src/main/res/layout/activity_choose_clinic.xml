@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChooseClinic">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="Please select your clinic."
+            android:textColor="#A4CA4C"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/clinicNames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp">
+
+            <RadioButton
+                android:id="@+id/appletree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Appletree Medical Group" />
+
+            <RadioButton
+                android:id="@+id/rideauFriel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rideau Friel Medical Center" />
+
+            <RadioButton
+                android:id="@+id/bank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bank Medical Centre" />
+
+            <RadioButton
+                android:id="@+id/uOttawa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="uOttawa Health Services" />
+
+            <RadioButton
+                android:id="@+id/southbank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Southbank Medical Centre" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Continue" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
