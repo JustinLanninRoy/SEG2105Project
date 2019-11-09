@@ -4,41 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ClinicList">
+    tools:context=".AddClinic">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/title"
+        <EditText
+            android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="Clinics currently available on Vital Care"
-            android:textAlignment="center"
-            android:textColor="#A4CA4C"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:ems="10"
+            android:hint="New Clinic Name"
+            android:inputType="textPersonName" />
 
         <Button
-            android:id="@+id/addClinic"
-            android:layout_width="match_parent"
+            android:id="@+id/addThisClinic"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Add New Clinic" />
-
-        <ListView
-            android:id="@+id/clinicListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+            android:text="Add This Clinic" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

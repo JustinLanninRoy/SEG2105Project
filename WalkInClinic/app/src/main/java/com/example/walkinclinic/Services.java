@@ -2,29 +2,116 @@ package com.example.walkinclinic;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class Services extends AppCompatActivity {
+    private static final String TAG = "Services";
+    TextView title;
+    EditText newService;
+    Button addService;
+    ListView services;
+    DatabaseHelper databaseHelper;
+    int selectedID;
+    String selectedClinic;
+    String service;
+    String[] split;
+    String list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_services);
-        //checkBox1.setChecked(checked);
+        title = findViewById(R.id.textView2);
+        newService = findViewById(R.id.editText2);
+        addService = findViewById(R.id.addService);
+        services = findViewById(R.id.services);
+        databaseHelper = new DatabaseHelper(this);
+        Intent received = getIntent();
+        selectedID = received.getIntExtra("id", -1);
+        selectedClinic = received.getStringExtra("name");
+        title.setText(selectedClinic + " Services");
+
+        addService.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                service = newService.getText().toString().trim();
+                Cursor data = databaseHelper.getServiceData();
+                ArrayList<String> listData = new ArrayList<>();
+                while (data.moveToNext()){
+                    listData.add(data.getString(1));
+                }
+                String list = listData.get(selectedID-1);
+                if (list.equals("")){
+                    databaseHelper.updateService(list + service, selectedID, list);
+                } else {
+                    databaseHelper.updateService(list + ", " + service, selectedID, list);
+                }
+                Intent i = new Intent(Services.this, Services.class);
+                i.putExtra("id", selectedID);
+                i.putExtra("name", selectedClinic);
+                startActivity(i);
+            }
+        });
+
+        populateListView();
     }
 
-    @Override
-    public void onBackPressed(){
-        CheckBox check3 = (CheckBox) findViewById(R.id.checkBox3);
-        boolean referral = check3.isChecked();
-        CheckBox check2 = (CheckBox) findViewById(R.id.checkBox2);
-        boolean prescription = check2.isChecked();
-        CheckBox check5 = (CheckBox) findViewById(R.id.checkBox5);
-        boolean immunization = check5.isChecked();
-        CheckBox check4 = (CheckBox) findViewById(R.id.checkBox4);
-        boolean physical = check4.isChecked();
-        CheckBox check7 = (CheckBox) findViewById(R.id.checkBox7);
-        boolean injury = check7.isChecked();
-        super.onBackPressed();
+    private void populateListView(){
+        Log.d(TAG, "populateListView: Displaying data in the ListView");
+        Cursor data = databaseHelper.getServiceData();
+
+        ArrayList<String> listData = new ArrayList<>();
+        while (data.moveToNext()){
+            listData.add(data.getString(1));
+        }
+
+        list = listData.get(selectedID-1);
+        split = list.split(", ");
+
+        if (list.equals("")){
+            return;
+        }
+
+        ArrayList<String> serviceData = new ArrayList<>();
+
+        for (String s: split){
+            serviceData.add(s);
+        }
+
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, serviceData);
+        services.setAdapter(adapter);
+
+        services.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = adapterView.getItemAtPosition(i).toString();
+                Log.d(TAG, "onItemClick: You Clicked on " + name);
+                Intent x = new Intent(Services.this, ChangeService.class);
+                x.putExtra("oldList", list);
+                x.putExtra("splitList", split);
+                x.putExtra("id", selectedID);
+                x.putExtra("service", name);
+                x.putExtra("clinic", selectedClinic);
+                startActivity(x);
+            }
+        });
+    }
+
+    private void toastMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
