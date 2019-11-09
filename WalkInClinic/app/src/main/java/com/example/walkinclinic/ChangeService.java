@@ -17,11 +17,14 @@ public class ChangeService extends AppCompatActivity {
     String[] split;
     int iD;
     String service;
+    String role;
     String clinic;
     EditText newService;
+    EditText serviceRole;
     Button update;
     Button delete;
     DatabaseHelper databaseHelper;
+    String both;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,24 +32,51 @@ public class ChangeService extends AppCompatActivity {
         setContentView(R.layout.activity_change_service);
 
         Intent received = getIntent();
+        both = received.getStringExtra("service");
+        String[] split2 = both.split(": ");
+
+
         iD = received.getIntExtra("id", -1);
         list = received.getStringExtra("oldList");
         split = received.getStringArrayExtra("splitList");
-        service = received.getStringExtra("service");
+        service = split2[0];
+        role = split2[1];
         clinic = received.getStringExtra("clinic");
 
         newService = findViewById(R.id.editText3);
+        serviceRole = findViewById(R.id.editText5);
         update = findViewById(R.id.update);
         delete = findViewById(R.id.delete);
         databaseHelper = new DatabaseHelper(this);
 
         newService.setText(service);
+        serviceRole.setText(role);
 
         update.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String addition = newService.getText().toString().trim();
+                String addition = newService.getText().toString().trim() + ": " + serviceRole.getText().toString().trim();
+                String addService = newService.getText().toString().trim();
+                String addRole = serviceRole.getText().toString().trim();
+
+                if (addService.equals("") || addRole.equals("")){
+                    toastMessage("To update, you must enter both a service and its role.");
+                    return;
+                }
+
                 for (int i = 0; i < split.length; i++){
-                    if (split[i].equals(service)){
+                    if (split[i].equals(addition)){
+                        toastMessage("This service already exists");
+                        return;
+                    }
+                }
+
+                if (!(addRole.equalsIgnoreCase("doctor") || addRole.equalsIgnoreCase("nurse") || addRole.equalsIgnoreCase("staff"))){
+                    toastMessage("Role must be either doctor, nurse, or staff");
+                    return;
+                }
+
+                for (int i = 0; i < split.length; i++){
+                    if (split[i].equals(both)){
                         split[i] = addition;
                     }
                 }
@@ -64,7 +94,7 @@ public class ChangeService extends AppCompatActivity {
 
         delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String remove = newService.getText().toString().trim();
+                String remove = newService.getText().toString().trim() + ": " + serviceRole.getText().toString().trim();
                 boolean flag = false;
                 for (int i = 0; i < split.length; i++){
                     if (split[i].equals(remove)){
@@ -73,13 +103,15 @@ public class ChangeService extends AppCompatActivity {
                     }
                 }
                 if (!flag){
-                    toastMessage("The service to be deleted does not exist");
+                    toastMessage("The service to be deleted does not exist, ensure both the service and role are entered correctly");
                     return;
                 }
 
                 String newList;
 
-                if (split[0] == null){
+                if (split[0] == null && split.length == 1){
+                    newList = "";
+                } else if (split[0] == null){
                      newList = split[1];
                     for (int i = 2; i < split.length; i++){
                         newList = newList + ", " + split[i];

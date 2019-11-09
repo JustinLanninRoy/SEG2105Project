@@ -23,12 +23,14 @@ public class Services extends AppCompatActivity {
     private static final String TAG = "Services";
     TextView title;
     EditText newService;
+    EditText serviceRole;
     Button addService;
     ListView services;
     DatabaseHelper databaseHelper;
     int selectedID;
     String selectedClinic;
     String service;
+    String role;
     String[] split;
     String list;
 
@@ -38,6 +40,7 @@ public class Services extends AppCompatActivity {
         setContentView(R.layout.activity_services);
         title = findViewById(R.id.textView2);
         newService = findViewById(R.id.editText2);
+        serviceRole = findViewById(R.id.editText4);
         addService = findViewById(R.id.addService);
         services = findViewById(R.id.services);
         databaseHelper = new DatabaseHelper(this);
@@ -49,16 +52,38 @@ public class Services extends AppCompatActivity {
         addService.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 service = newService.getText().toString().trim();
+                role = serviceRole.getText().toString().trim();
+
+                if (service.equals("")){
+                    toastMessage("Please type a new service to add it");
+                    return;
+                }
+
+                if (!(role.equalsIgnoreCase("doctor") || role.equalsIgnoreCase("nurse") || role.equalsIgnoreCase("staff"))){
+                    toastMessage("Role must be either doctor, nurse, or staff");
+                    return;
+                }
+
                 Cursor data = databaseHelper.getServiceData();
                 ArrayList<String> listData = new ArrayList<>();
                 while (data.moveToNext()){
                     listData.add(data.getString(1));
                 }
                 String list = listData.get(selectedID-1);
+
+                String[] split = list.split(", ");
+
+                for (String s: split){
+                    if (s.equals(service)){
+                        toastMessage("This service already exists");
+                        return;
+                    }
+                }
+
                 if (list.equals("")){
-                    databaseHelper.updateService(list + service, selectedID, list);
+                    databaseHelper.updateService(list + service + ": " + role, selectedID, list);
                 } else {
-                    databaseHelper.updateService(list + ", " + service, selectedID, list);
+                    databaseHelper.updateService(list + ", " + service  + ": " + role, selectedID, list);
                 }
                 Intent i = new Intent(Services.this, Services.class);
                 i.putExtra("id", selectedID);
