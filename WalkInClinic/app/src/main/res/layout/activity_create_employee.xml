@@ -89,50 +89,12 @@
                     android:inputType="number" />
 
                 <EditText
-                    android:id="@+id/position"
+                    android:id="@+id/clinic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/txtEditPosition"
+                    android:hint="Clinic"
                     android:inputType="textPersonName" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/supervisor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/txtEditSuperVisor"
-                    android:inputType="textPersonName" />
-
-                <RadioGroup
-                    android:id="@+id/workTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <RadioButton
-                        android:id="@+id/partTime"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/rbtPartTime" />
-
-                    <RadioButton
-                        android:id="@+id/fullTime"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/rbtFullTime"
-                        android:text="@string/rbtFullTime" />
-
-                </RadioGroup>
 
             </LinearLayout>
 
@@ -185,6 +147,38 @@
                     android:ems="10"
                     android:hint="@string/txtEditPasswordPatient"
                     android:inputType="textPassword" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/workTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <RadioButton
+                        android:id="@+id/partTime"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/rbtPartTime" />
+
+                    <RadioButton
+                        android:id="@+id/fullTime"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/rbtFullTime"
+                        android:text="@string/rbtFullTime" />
+
+                </RadioGroup>
 
             </LinearLayout>
 

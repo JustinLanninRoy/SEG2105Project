@@ -11,41 +11,32 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CreateEmployee extends CreatePerson {
-    List<Employee> employees;
-    DatabaseReference databaseEmployees;
     EditText employeeNum;
-    EditText position;
-    EditText supervisor;
+    EditText clinic;
     RadioGroup time;
+    private static final String TAG = "CreateEmployee";
+
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_employee);
-        databaseEmployees = FirebaseDatabase.getInstance().getReference("patients");
-        employees = new ArrayList<>();
         employeeNum = findViewById(R.id.employeeNumber);
-        position = findViewById(R.id.position);
-        supervisor = findViewById(R.id.supervisor);
+        clinic = findViewById(R.id.clinic);
         time = findViewById(R.id.workTime);
+        databaseHelper = new DatabaseHelper(this);
+    }
+
+    private  void toastMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     public void onCreatePerson(View view) {
         super.onCreatePerson(view);
-        if (!checkAllFields()){
-            addEmployee();
-        }
     }
 
     @Override
@@ -71,10 +62,7 @@ public class CreateEmployee extends CreatePerson {
         else if (checkEmpty(employeeNum)) {
             return true;
         }
-        else if (checkEmpty(position)){
-            return true;
-        }
-        else if (checkEmpty(supervisor)){
+        else if (checkEmpty(clinic)){
             return true;
         }
         else{
@@ -83,27 +71,8 @@ public class CreateEmployee extends CreatePerson {
     }
 
     @Override
-    protected void onStart() {
-
-        super.onStart();
-        databaseEmployees.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    Employee employee = postSnapshot.getValue(Employee.class);
-                    employees.add(employee);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    @Override
     void openPostLoggin() {
+        addEmployee();
         //creating the string
         String postLogginString = ("Welcome Employee " + firstName.getText().toString() + "! You are logged-in.");
         //opening the PostLoggin class and sending the message with it
@@ -116,20 +85,21 @@ public class CreateEmployee extends CreatePerson {
     private void addEmployee() {
         String fName = firstName.getText().toString().trim();
         String lName = lastName.getText().toString().trim();
-        String superv = supervisor.getText().toString().trim();
-        String pos = position.getText().toString().trim();
-        String value = employeeNum.getText().toString().trim();
-        int eNum = Integer.parseInt(value);
+        String pos = clinic.getText().toString().trim();
+        String eNum = employeeNum.getText().toString().trim();
         String email = Email.getText().toString().trim();
         String phone = Phone.getText().toString().trim();
         String user = userName.getText().toString().trim();
         String password = userPassword.getText().toString().trim();
-        String id = databaseEmployees.push().getKey();
         int selected = time.getCheckedRadioButtonId();
         RadioButton chosen = findViewById(selected);
         String work = chosen.getText().toString().trim();
-        Employee employee = new Employee(id, fName, lName, eNum, pos, superv, email, phone, user, password, work);
-        employees.add(employee);
-        //databaseEmployees.child(id).setValue(employee);
+        String employee = fName + ", " + lName + ", " + eNum + ", " + pos + ", " + email + ", " + phone + ", " + user + ", " + password + ", " + work;
+        boolean insertData = databaseHelper.addDataA(employee);
+        if (insertData){
+            toastMessage("Data Successfully Inserted");
+        } else {
+            toastMessage("Something went wrong");
+        }
     }
 }

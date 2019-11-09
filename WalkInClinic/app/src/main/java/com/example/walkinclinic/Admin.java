@@ -20,11 +20,14 @@ public class Admin extends AppCompatActivity {
     }
 
     public void viewEmployees(View view){
-
+        Intent i = new Intent(this, ListActivity.class);
+        i.putExtra("type", "employee");
+        startActivity(i);
     }
 
     public void viewPatients(View view){
         Intent i = new Intent(this, ListActivity.class);
+        i.putExtra("type", "patient");
         startActivity(i);
     }
 }

@@ -25,6 +25,7 @@ public class EditDataActivity extends AppCompatActivity {
     DatabaseHelper databaseHelper;
 
     private String selectedName;
+    private String selectedType;
     private int selectedID;
 
     @Override
@@ -45,22 +46,38 @@ public class EditDataActivity extends AppCompatActivity {
         Intent received = getIntent();
         selectedID = received.getIntExtra("id", -1);
         selectedName = received.getStringExtra("name");
+        selectedType = received.getStringExtra("type");
         String[] split = selectedName.split(", ");
 
-        name.setText(split[0] + " " + split[1]);
-        address.setText("Address: " + split[2]);
-        age.setText("Age: " + split[3]);
-        email.setText("Email: " + split[4]);
-        phone.setText("Phone: " + split[5]);
-        username.setText("Username: " + split[6]);
-        password.setText("Password: " + split[7]);
+        if (selectedType.equals("patient")){
+            name.setText(split[0] + " " + split[1]);
+            address.setText("Address: " + split[2]);
+            age.setText("Age: " + split[3]);
+            email.setText("Email: " + split[4]);
+            phone.setText("Phone: " + split[5]);
+            username.setText("Username: " + split[6]);
+            password.setText("Password: " + split[7]);
+        } else if (selectedType.equals("employee")){
+            name.setText(split[0] + " " + split[1] + " (" + split[8] + ")");
+            address.setText("Employee #: " + split[2]);
+            age.setText("Clinic: " + split[3]);
+            email.setText("Email: " + split[4]);
+            phone.setText("Phone: " + split[5]);
+            username.setText("Username: " + split[6]);
+            password.setText("Password: " + split[7]);
+        }
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseHelper.deleteName(selectedID, selectedName);
+                if (selectedType.equals("patient")){
+                    databaseHelper.deleteName(selectedID, selectedName);
+                } else if (selectedType.equals("employee")){
+                    databaseHelper.deleteNameA(selectedID, selectedName);
+                }
                 toastMessage("removed from database");
                 Intent i = new Intent(EditDataActivity.this, ListActivity.class);
+                i.putExtra("type", selectedType);
                 startActivity(i);
             }
         });
