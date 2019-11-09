@@ -24,6 +24,7 @@ public class Admin extends AppCompatActivity {
     }
 
     public void viewPatients(View view){
-
+        Intent i = new Intent(this, ListActivity.class);
+        startActivity(i);
     }
 }

@@ -82,7 +82,7 @@
 
                 <EditText
                     android:id="@+id/StreetAddress"
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.1"
                     android:ems="10"
@@ -90,51 +90,13 @@
                     android:inputType="textPersonName" />
 
                 <EditText
-                    android:id="@+id/postalCode"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.1"
-                    android:ems="10"
-                    android:hint="@string/txtEditPostalCode"
-                    android:inputType="text" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <EditText
                     android:id="@+id/Age"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/txtEditAge"
                     android:inputType="number" />
-
-                <RadioGroup
-                    android:id="@+id/gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <RadioButton
-                        android:id="@+id/Male"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/rbtMale" />
-
-
-                    <RadioButton
-                        android:id="@+id/Female"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rbtFemale" />
-                </RadioGroup>
 
             </LinearLayout>
 

@@ -50,9 +50,15 @@ public class PostLoggin extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Opening Admin Activity",Toast.LENGTH_LONG).show();
         }
         if (key.equals("Employee")){
-            Intent i = new Intent(this, SelectClinic.class);
+            Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"Opening Employee Activity",Toast.LENGTH_LONG).show();
+            //Intent i = new Intent(this, SelectClinic.class);
+            //startActivity(i);
+            //Toast.makeText(getApplicationContext(),"Opening Employee Activity",Toast.LENGTH_LONG).show();
+        }
+        if (key.equals("Patient")){
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
         }
     }
 }

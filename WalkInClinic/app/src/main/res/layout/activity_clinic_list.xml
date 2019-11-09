@@ -35,6 +35,8 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="15dp"
             android:clickable="true"
+            android:focusable="true"
+            android:onClick="selectAppletree"
             android:text="Appletree Medical Group"
             android:textColor="#030000"
             android:textSize="18sp" />
@@ -47,6 +49,8 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:clickable="true"
+            android:focusable="true"
+            android:onClick="selectRideau"
             android:text="Rideau Friel Medical Center"
             android:textColor="#030000"
             android:textSize="18sp" />
@@ -59,6 +63,8 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:clickable="true"
+            android:focusable="true"
+            android:onClick="selectBank"
             android:text="Bank Medical Centre"
             android:textColor="#030000"
             android:textSize="18sp" />
@@ -71,6 +77,8 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:clickable="true"
+            android:focusable="true"
+            android:onClick="selectOttawa"
             android:text="uOttawa Health Services"
             android:textColor="#030000"
             android:textSize="18sp" />
@@ -83,8 +91,18 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:clickable="true"
+            android:focusable="true"
+            android:onClick="selectSouth"
             android:text="Southbank Medical Centre"
             android:textColor="#030000"
             android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
