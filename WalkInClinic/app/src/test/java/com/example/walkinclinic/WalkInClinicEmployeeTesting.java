@@ -4,16 +4,16 @@ import android.widget.EditText;
 
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 
 import static org.junit.Assert.*;
 
-public class WalkInClinicTesting {
+public class WalkInClinicEmployeeTesting {
 
     @Rule
     public ActivityTestRule<CreateEmployee> mActivityTestRule = new ActivityTestRule<CreateEmployee>(CreateEmployee.class);
@@ -25,7 +25,6 @@ public class WalkInClinicTesting {
     }
 
     @Test
-    @UiThreadTest
     public void checkEmployeeFirstName(){
         assertNotNull(test.findViewById(R.id.FirstName));
         EditText testText = test.findViewById(R.id.FirstName);
@@ -34,6 +33,16 @@ public class WalkInClinicTesting {
         assertEquals("Steven", nameGiven);
     }
 
-    
+    @Test
+    public void checkEmployeePhoneNumber(){
+        assertNotNull(test.findViewById(R.id.phoneNumber));
+        EditText testNum = test.findViewById(R.id.phoneNumber);
+        testNum.setText("123-092-0987");
+        String numGiven = testNum.getText().toString();
+        assertNotEquals(null, numGiven);
+    }
+
+
+
 
 }

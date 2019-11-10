@@ -25,7 +25,7 @@ public class AddClinic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_clinic);
         addClinic = findViewById(R.id.addThisClinic);
-        name = findViewById(R.id.editText);
+        name = findViewById(R.id.clinicToAdd);
         databaseHelper = new DatabaseHelper(this);
 
         addClinic.setOnClickListener(new View.OnClickListener() {
