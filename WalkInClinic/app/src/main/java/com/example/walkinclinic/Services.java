@@ -54,16 +54,6 @@ public class Services extends AppCompatActivity {
                 service = newService.getText().toString().trim();
                 role = serviceRole.getText().toString().trim();
 
-                if (service.equals("")){
-                    toastMessage("Please type a new service to add it");
-                    return;
-                }
-
-                if (!(role.equalsIgnoreCase("doctor") || role.equalsIgnoreCase("nurse") || role.equalsIgnoreCase("staff"))){
-                    toastMessage("Role must be either doctor, nurse, or staff");
-                    return;
-                }
-
                 Cursor data = databaseHelper.getServiceData();
                 ArrayList<String> listData = new ArrayList<>();
                 while (data.moveToNext()){
@@ -73,11 +63,16 @@ public class Services extends AppCompatActivity {
 
                 String[] split = list.split(", ");
 
-                for (String s: split){
-                    if (s.equals(service)){
-                        toastMessage("This service already exists");
-                        return;
-                    }
+                int x = invalidService(service, role, split);
+                if (x == 1){
+                    toastMessage("Please type a new service to add it");
+                    return;
+                } else if (x == 2){
+                    toastMessage("Role must be either doctor, nurse, or staff");
+                    return;
+                } else if (x == 3){
+                    toastMessage("This service already exists");
+                    return;
                 }
 
                 if (list.equals("")){
@@ -93,6 +88,23 @@ public class Services extends AppCompatActivity {
         });
 
         populateListView();
+    }
+
+    public int invalidService(String service, String role, String[] services){
+        int flag = 0;
+        if (service.equals("")){
+            flag = 1;
+        }
+
+        if (!(role.equalsIgnoreCase("doctor") || role.equalsIgnoreCase("nurse") || role.equalsIgnoreCase("staff"))){
+            flag = 2;
+        }
+        for (String s: services){
+            if (s.equalsIgnoreCase(service + ": " + role)){
+                flag = 3;
+            }
+        }
+        return flag;
     }
 
     private void populateListView(){

@@ -58,19 +58,15 @@ public class ChangeService extends AppCompatActivity {
                 String addService = newService.getText().toString().trim();
                 String addRole = serviceRole.getText().toString().trim();
 
-                if (addService.equals("") || addRole.equals("")){
+                int x = validateServiceUpdate(addService, addRole, split);
+
+                if (x == 1){
                     toastMessage("To update, you must enter both a service and its role.");
                     return;
-                }
-
-                for (int i = 0; i < split.length; i++){
-                    if (split[i].equals(addition)){
-                        toastMessage("This service already exists");
-                        return;
-                    }
-                }
-
-                if (!(addRole.equalsIgnoreCase("doctor") || addRole.equalsIgnoreCase("nurse") || addRole.equalsIgnoreCase("staff"))){
+                } else if (x == 2){
+                    toastMessage("This service already exists");
+                    return;
+                } else if (x == 3) {
                     toastMessage("Role must be either doctor, nurse, or staff");
                     return;
                 }
@@ -95,16 +91,12 @@ public class ChangeService extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String remove = newService.getText().toString().trim() + ": " + serviceRole.getText().toString().trim();
-                boolean flag = false;
-                for (int i = 0; i < split.length; i++){
-                    if (split[i].equals(remove)){
-                        split[i] = null;
-                        flag = true;
-                    }
-                }
-                if (!flag){
+                int x = validateServiceDelete(remove, split);
+                if (x == -1){
                     toastMessage("The service to be deleted does not exist, ensure both the service and role are entered correctly");
                     return;
+                } else {
+                    split[x] = null;
                 }
 
                 String newList;
@@ -132,6 +124,32 @@ public class ChangeService extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    public int validateServiceUpdate(String service, String role, String[] list){
+        if (service.equals("") || role.equals("")){
+            return 1;
+        }
+
+        for (int i = 0; i < list.length; i++){
+            if (list[i].equalsIgnoreCase(service + ": " + role)){
+                return 2;
+            }
+        }
+
+        if (!(role.equalsIgnoreCase("doctor") || role.equalsIgnoreCase("nurse") || role.equalsIgnoreCase("staff"))){
+            return 3;
+        }
+        return 0;
+    }
+
+    public int validateServiceDelete(String remove, String[] list){
+        for (int i = 0; i < list.length; i++){
+            if (list[i].equalsIgnoreCase(remove)){
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void toastMessage(String message){

@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
         TextView passWord = (TextView) findViewById(R.id.txtEditPassword);
         String password = passWord.getText().toString().trim();
 
-        if(username.equals("admin") && password.equals("5T5ptQ")){
+        int x = validateLogin(username, password);
+        if(x == 1){
             //creating the string
             String postLogginString = ("Welcome Admin! You are logged-in.");
 
@@ -41,13 +42,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         } else {
             //give error warning to user
-            Toast.makeText(getApplicationContext(),"Account login is currently under development. The only way to log in is by selecting admin, inputting username: admin, password: 5T5ptQ",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Account login is currently under development. Currently you can only log in as admin.",Toast.LENGTH_LONG).show();
 
             //forcefully input loggin for now
             TextView setUsername = (TextView) findViewById(R.id.txtEditUsername);
             setUsername.setText("admin");
             TextView userPassword = (TextView) findViewById(R.id.txtEditPassword);
             userPassword.setText("5T5ptQ");
+        }
+    }
+
+    public int validateLogin(String username, String password){
+        if(username.equals("admin") && password.equals("5T5ptQ")){
+            return 1;
+        } else {
+            return 0;
         }
     }
 

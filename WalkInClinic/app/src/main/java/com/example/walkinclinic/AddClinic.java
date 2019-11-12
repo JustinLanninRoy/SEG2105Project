@@ -38,18 +38,14 @@ public class AddClinic extends AppCompatActivity {
                     listData.add(data.getString(1));
                 }
 
-                if (clinic.equals("")){
+                int x = invalidClinic(clinic, listData);
+
+                if (x == 1){
                     toastMessage("Please type a new clinic to add it");
                     return;
-                }
-
-                Iterator<String> iter = listData.iterator();
-
-                while (iter.hasNext()){
-                    if (iter.next().equals(clinic)){
-                        toastMessage("This clinic already exists");
-                        return;
-                    }
+                } else if (x == 2){
+                    toastMessage("This clinic already exists");
+                    return;
                 }
 
                 boolean insertData = databaseHelper.addNewClinic(clinic);
@@ -62,6 +58,19 @@ public class AddClinic extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    public int invalidClinic(String clinic, ArrayList<String> list){
+        if (clinic.equals("")){
+            return 1;
+        }
+        Iterator<String> iter = list.iterator();
+        while (iter.hasNext()){
+            if (iter.next().equals(clinic)){
+                return 2;
+            }
+        }
+        return 0;
     }
 
     private  void toastMessage(String message){
