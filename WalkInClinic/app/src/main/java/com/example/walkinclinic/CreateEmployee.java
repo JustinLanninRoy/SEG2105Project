@@ -94,8 +94,7 @@ public class CreateEmployee extends CreatePerson {
         int selected = time.getCheckedRadioButtonId();
         RadioButton chosen = findViewById(selected);
         String work = chosen.getText().toString().trim();
-        String employee = fName + ", " + lName + ", " + eNum + ", " + pos + ", " + email + ", " + phone + ", " + user + ", " + password + ", " + work;
-        boolean insertData = databaseHelper.addDataA(employee);
+        boolean insertData = databaseHelper.addDataA(fName, lName, eNum, pos, email, phone, user, password, work);
         if (insertData){
             toastMessage("Data Successfully Inserted");
         } else {

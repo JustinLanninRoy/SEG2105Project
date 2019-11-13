@@ -16,7 +16,6 @@
         <activity android:name=".AddClinic" />
         <activity android:name=".EditDataActivity" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".Employee" />
         <activity android:name=".ClinicList" />
         <activity android:name=".ChooseClinic" />
         <activity android:name=".SelectClinic" />
@@ -28,7 +27,6 @@
         <activity
             android:name=".Services"
             android:parentActivityName=".ClinicList" />
-        <activity android:name=".Patient" />
         <activity android:name=".CreatePerson" />
         <activity android:name=".MainActivity">
             <intent-filter>

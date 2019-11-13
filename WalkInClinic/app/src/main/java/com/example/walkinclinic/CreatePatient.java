@@ -89,8 +89,7 @@ public class CreatePatient extends CreatePerson {
         String phone = Phone.getText().toString().trim();
         String user = userName.getText().toString().trim();
         String password = userPassword.getText().toString().trim();
-        String patient = fName + ", " + lName + ", " + address + ", " + age + ", " + email + ", " + phone + ", " + user + ", " + password;
-        boolean insertData = databaseHelper.addData(patient);
+        boolean insertData = databaseHelper.addData(fName, lName, address, age, email, phone, user, password);
         if (insertData){
             toastMessage("Data Successfully Inserted");
         } else {

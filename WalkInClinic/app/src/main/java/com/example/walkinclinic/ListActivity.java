@@ -12,12 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
 import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
+    private TextView title;
     private static final String TAG = "ListActivity";
     DatabaseHelper databaseHelper;
     private ListView mListView;
@@ -26,6 +28,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        title = findViewById(R.id.textView10);
         setContentView(R.layout.list_layout);
         mListView = findViewById(R.id.listView);
         databaseHelper = new DatabaseHelper(this);
@@ -43,7 +46,7 @@ public class ListActivity extends AppCompatActivity {
         Cursor data = databaseHelper.getData();
         ArrayList<String> listData = new ArrayList<>();
         while (data.moveToNext()){
-            listData.add(data.getString(1));
+            listData.add(data.getString(0) + ": " + data.getString(1) + " " + data.getString(2));
         }
 
         ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
@@ -53,22 +56,13 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = adapterView.getItemAtPosition(i).toString();
+                String[] split = name.split(": ");
                 Log.d(TAG, "onItemClick: You Clicked on " + name);
-                Cursor data = databaseHelper.getItemID(name);
-                int itemID = -1;
-                while (data.moveToNext()){
-                    itemID = data.getInt(0);
-                }
-                if (itemID > -1) {
-                    Log.d(TAG, "onItemClick: The ID is: " + itemID);
-                    Intent editScreenIntent = new Intent(ListActivity.this, EditDataActivity.class);
-                    editScreenIntent.putExtra("id", itemID);
-                    editScreenIntent.putExtra("name", name);
-                    editScreenIntent.putExtra("type", "patient");
-                    startActivity(editScreenIntent);
-                } else {
-                    toastMessage("No ID associated with that name");
-                }
+                Intent editScreenIntent = new Intent(ListActivity.this, EditDataActivity.class);
+                editScreenIntent.putExtra("id", Integer.parseInt(split[0]));
+                editScreenIntent.putExtra("name", name);
+                editScreenIntent.putExtra("type", "patient");
+                startActivity(editScreenIntent);
             }
         });
     }
@@ -78,7 +72,7 @@ public class ListActivity extends AppCompatActivity {
         Cursor data = databaseHelper.getDataA();
         ArrayList<String> listData = new ArrayList<>();
         while (data.moveToNext()){
-            listData.add(data.getString(1));
+            listData.add(data.getString(0) + ": " + data.getString(1) + " " + data.getString(2));
         }
 
         ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
@@ -88,27 +82,13 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = adapterView.getItemAtPosition(i).toString();
+                String[] split = name.split(": ");
                 Log.d(TAG, "onItemClick: You Clicked on " + name);
-                Cursor data = databaseHelper.getItemIDA(name);
-                int itemID = -1;
-                while (data.moveToNext()){
-                    itemID = data.getInt(0);
-                }
-                if (itemID > -1) {
-                    Log.d(TAG, "onItemClick: The ID is: " + itemID);
-                    Intent editScreenIntent = new Intent(ListActivity.this, EditDataActivity.class);
-                    editScreenIntent.putExtra("id", itemID);
-                    editScreenIntent.putExtra("name", name);
-                    editScreenIntent.putExtra("type", "employee");
-                    startActivity(editScreenIntent);
-                } else {
-                    toastMessage("No ID associated with that name");
-                }
+                Intent editScreenIntent = new Intent(ListActivity.this, EditDataActivity.class);
+                editScreenIntent.putExtra("id", Integer.parseInt(split[0]));
+                editScreenIntent.putExtra("type", "employee");
+                startActivity(editScreenIntent);
             }
         });
-    }
-
-    private void toastMessage(String message){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
