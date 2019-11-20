@@ -118,9 +118,15 @@ public class CreateEmployee extends CreatePerson {
         for (Boolean b: checkedItems){
                 checked = checked + b + ", ";
         }
+        boolean[] payments = new boolean[getResources().getStringArray(R.array.payment_types).length];
+        String checkedPayments = "";
+        for (Boolean b: payments){
+            checkedPayments = checkedPayments + b + ", ";
+        }
         databaseHelper.addDataA(fName, lName, pos, email, phone, user, password);
         if (x == 2) {
-            databaseHelper.addNewClinic(pos, checked);
+            String times = "00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00";
+            databaseHelper.addNewClinic(pos, checked, checkedPayments, times);
         }
     }
 }

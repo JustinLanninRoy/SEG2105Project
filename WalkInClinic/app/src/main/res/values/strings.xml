@@ -49,4 +49,11 @@
         <item>TD Insurance</item>
         <item>Ivari</item>
     </string-array>
+    <string-array name="payment_types">
+        <item>Credit</item>
+        <item>Debit</item>
+        <item>Cash</item>
+        <item>E-Transfer</item>
+        <item>PayPal</item>
+    </string-array>
 </resources>

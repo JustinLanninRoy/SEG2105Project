@@ -27,12 +27,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL9 = "password";
     private static final String CLINIC = "clinic";
     private static final String SERVICES = "services";
+    private static final String SERVICESBOOL = "bool_services";
+    private static final String SERVICESINT = "int_services";
     private static final String ICHECKED = "bool_insurance";
     private static final String ISELECTED = "int_insurance";
+    private static final String PCHECKED = "bool_payment";
+    private static final String PSELECTED = "int_payment";
+    private static final String HOURS = "hours";
 
     private String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + COL4 + " TEXT, " + COL5 + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
     private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
-    private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + SERVICES + " TEXT)";
+    private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + PCHECKED + " TEXT, " + PSELECTED + " TEXT, " + SERVICESBOOL + " TEXT, " + SERVICESINT + " TEXT, " + HOURS + " TEXT)";
     private String createTableC = "CREATE TABLE " + TABLE_SERVICES + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SERVICES + " TEXT)";
 
     public DatabaseHelper(Context context){
@@ -97,13 +102,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean addNewClinic(String name, String checkedBool){
+    public boolean addNewClinic(String name, String checkedBool, String paymentBool, String times){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CLINIC, name);
         contentValues.put(ICHECKED, checkedBool);
         contentValues.put(ISELECTED, "");
-        contentValues.put(SERVICES, "");
+        contentValues.put(PCHECKED, paymentBool);
+        contentValues.put(PSELECTED, "");
+        contentValues.put(SERVICESBOOL, "");
+        contentValues.put(SERVICESINT, "");
+        contentValues.put(HOURS, times);
 
         long result = db.insert(TABLE_CLINIC, null, contentValues);
 
@@ -137,16 +146,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void updateClinic(String name, String bools, String ints){
+    public void updateClinic(String name, String bools, String ints, String pbools, String pints, String sbools, String sints, String hours){
         SQLiteDatabase db = this.getWritableDatabase();
-        //String query = "UPDATE " + TABLE_CLINIC + " SET " + ICHECKED + " = \"" + bools + "\" AND " + ISELECTED + " = \"" + ints +
-        //        "\" WHERE " + CLINIC + " = \"" + name + "\"" ;
-        //Log.d(TAG, "updateName: query: " + query);
         ContentValues contentValues = new ContentValues();
         contentValues.put(ICHECKED, bools);
         contentValues.put(ISELECTED, ints);
+        contentValues.put(PCHECKED, pbools);
+        contentValues.put(PSELECTED, pints);
+        contentValues.put(SERVICESBOOL, sbools);
+        contentValues.put(SERVICESINT, sints);
+        contentValues.put(HOURS, hours);
         db.update(TABLE_CLINIC, contentValues, CLINIC +"=?", new String[]{name});
-        //db.execSQL(query);
     }
 
     public Cursor getData(){
