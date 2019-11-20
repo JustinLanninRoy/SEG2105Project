@@ -28,13 +28,6 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/addClinic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Add New Clinic" />
-
         <ListView
             android:id="@+id/clinicListView"
             android:layout_width="match_parent"

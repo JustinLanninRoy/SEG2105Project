@@ -13,18 +13,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class ChangeService extends AppCompatActivity {
-    String list;
-    String[] split;
     int iD;
     String service;
     String role;
-    String clinic;
     EditText newService;
     EditText serviceRole;
     Button update;
     Button delete;
     DatabaseHelper databaseHelper;
     String both;
+    ArrayList<String> listData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +33,9 @@ public class ChangeService extends AppCompatActivity {
         both = received.getStringExtra("service");
         String[] split2 = both.split(": ");
 
-
         iD = received.getIntExtra("id", -1);
-        list = received.getStringExtra("oldList");
-        split = received.getStringArrayExtra("splitList");
         service = split2[0];
         role = split2[1];
-        clinic = received.getStringExtra("clinic");
 
         newService = findViewById(R.id.editText3);
         serviceRole = findViewById(R.id.editText5);
@@ -52,13 +46,20 @@ public class ChangeService extends AppCompatActivity {
         newService.setText(service);
         serviceRole.setText(role);
 
+        Cursor data = databaseHelper.getServiceData();
+
+        listData = new ArrayList<>();
+        while (data.moveToNext()){
+            listData.add(data.getString(1));
+        }
+
         update.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String addition = newService.getText().toString().trim() + ": " + serviceRole.getText().toString().trim();
                 String addService = newService.getText().toString().trim();
                 String addRole = serviceRole.getText().toString().trim();
 
-                int x = validateServiceUpdate(addService, addRole, split);
+                int x = validateServiceUpdate(addService, addRole, listData);
 
                 if (x == 1){
                     toastMessage("To update, you must enter both a service and its role.");
@@ -71,19 +72,8 @@ public class ChangeService extends AppCompatActivity {
                     return;
                 }
 
-                for (int i = 0; i < split.length; i++){
-                    if (split[i].equals(both)){
-                        split[i] = addition;
-                    }
-                }
-                String newList = split[0];
-                for (int i = 1; i < split.length; i++){
-                    newList = newList + ", " + split[i];
-                }
-                databaseHelper.updateService(newList, iD, list);
+                databaseHelper.updateService(addition, iD, service + ": " + role);
                 Intent i = new Intent(ChangeService.this, Services.class);
-                i.putExtra("id", iD);
-                i.putExtra("name", clinic);
                 startActivity(i);
             }
         });
@@ -91,48 +81,26 @@ public class ChangeService extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String remove = newService.getText().toString().trim() + ": " + serviceRole.getText().toString().trim();
-                int x = validateServiceDelete(remove, split);
+                int x = validateServiceDelete(remove, listData);
                 if (x == -1){
                     toastMessage("The service to be deleted does not exist, ensure both the service and role are entered correctly");
                     return;
-                } else {
-                    split[x] = null;
                 }
 
-                String newList;
-
-                if (split[0] == null && split.length == 1){
-                    newList = "";
-                } else if (split[0] == null){
-                     newList = split[1];
-                    for (int i = 2; i < split.length; i++){
-                        newList = newList + ", " + split[i];
-                    }
-                } else {
-                    newList = split[0];
-                    for (int i = 1; i < split.length; i++){
-                        if (split[i] != null){
-                            newList = newList + ", " + split[i];
-                        }
-                    }
-                }
-
-                databaseHelper.updateService(newList, iD, list);
+                databaseHelper.deleteService(iD);
                 Intent i = new Intent(ChangeService.this, Services.class);
-                i.putExtra("id", iD);
-                i.putExtra("name", clinic);
                 startActivity(i);
             }
         });
     }
 
-    public int validateServiceUpdate(String service, String role, String[] list){
+    public int validateServiceUpdate(String service, String role, ArrayList<String> list){
         if (service.equals("") || role.equals("")){
             return 1;
         }
 
-        for (int i = 0; i < list.length; i++){
-            if (list[i].equalsIgnoreCase(service + ": " + role)){
+        for (String s: list){
+            if (s.equalsIgnoreCase(service + ": " + role)){
                 return 2;
             }
         }
@@ -143,10 +111,10 @@ public class ChangeService extends AppCompatActivity {
         return 0;
     }
 
-    public int validateServiceDelete(String remove, String[] list){
-        for (int i = 0; i < list.length; i++){
-            if (list[i].equalsIgnoreCase(remove)){
-                return i;
+    public int validateServiceDelete(String remove, ArrayList<String> list){
+        for (String s: list){
+            if (s.equalsIgnoreCase(remove)){
+                return 1;
             }
         }
         return -1;

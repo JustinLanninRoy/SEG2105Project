@@ -32,4 +32,21 @@
     <string name="txtEditSuperVisor">Supervisor</string>
     <string name="txtEditDepartment">Department</string>
     <string name="txtEditPosition">Position</string>
+    <string name="ok_label">OK</string>
+    <string name="dialog_title">Insurance Types</string>
+    <string name="dismiss_label">Dismiss</string>
+    <string name="clear_all_label">Clear All</string>
+    <string-array name="insurance_types">
+        <item>Manulife</item>
+        <item>Sunlife Financial</item>
+        <item>GreatWest Life</item>
+        <item>Blue Cross</item>
+        <item>GMS Health Insurance</item>
+        <item>Scotia Life Health and Dental</item>
+        <item>State Farm</item>
+        <item>CAA</item>
+        <item>Green Shield Canada</item>
+        <item>TD Insurance</item>
+        <item>Ivari</item>
+    </string-array>
 </resources>

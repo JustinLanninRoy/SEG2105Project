@@ -12,8 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChangeService"></activity>
-        <activity android:name=".AddClinic" />
+        <activity android:name=".ClinicProfile"></activity>
+        <activity android:name=".Employee" />
+        <activity android:name=".AdminsClinicProfile" />
+        <activity android:name=".ChangeService" />
         <activity android:name=".EditDataActivity" />
         <activity android:name=".ListActivity" />
         <activity android:name=".ClinicList" />

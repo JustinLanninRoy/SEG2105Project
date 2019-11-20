@@ -14,26 +14,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
     private static final String TABLE_NAME = "people_table";
     private static final String TABLE_EMPLOYEE = "employee_table";
-    private static final String TABLE_CLINIC_NAME = "clinic_table";
-    private static final String TABLE_CLINIC_SERVICES = "service_table";
+    private static final String TABLE_CLINIC = "clinic_table";
+    private static final String TABLE_SERVICES = "service_table";
     private static final String COL1 = "ID";
     private static final String COL2 = "fname";
     private static final String COL3 = "lname";
     private static final String COL4 = "address";
     private static final String COL5 = "age";
-    private static final String EMNUM = "address";
     private static final String COL6 = "email";
     private static final String COL7 = "phone";
     private static final String COL8 = "username";
     private static final String COL9 = "password";
     private static final String CLINIC = "clinic";
     private static final String SERVICES = "services";
-    private static final String TIME = "TIME";
+    private static final String ICHECKED = "bool_insurance";
+    private static final String ISELECTED = "int_insurance";
 
     private String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + COL4 + " TEXT, " + COL5 + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
-    private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + EMNUM + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT, " + TIME + " TEXT)";
-    private String createTableB = "CREATE TABLE " + TABLE_CLINIC_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT)";
-    private String createTableC = "CREATE TABLE " + TABLE_CLINIC_SERVICES + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SERVICES + " TEXT)";
+    private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
+    private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + SERVICES + " TEXT)";
+    private String createTableC = "CREATE TABLE " + TABLE_SERVICES + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SERVICES + " TEXT)";
 
     public DatabaseHelper(Context context){
         super(context, TABLE_NAME, null, 1);
@@ -51,8 +51,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int i, int i1){
         db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_NAME);
         db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_EMPLOYEE);
-        db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_CLINIC_NAME);
-        db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_CLINIC_SERVICES);
+        db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_CLINIC);
+        db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_SERVICES);
         onCreate(db);
     }
 
@@ -77,18 +77,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean addDataA(String fname, String lname, String emNum, String clinic, String email, String phone, String user, String password, String time){
+    public boolean addDataA(String fname, String lname, String clinic, String email, String phone, String user, String password){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL2, fname);
         contentValues.put(COL3, lname);
-        contentValues.put(EMNUM, emNum);
         contentValues.put(CLINIC, clinic);
         contentValues.put(COL6, email);
         contentValues.put(COL7, phone);
         contentValues.put(COL8, user);
         contentValues.put(COL9, password);
-        contentValues.put(TIME, time);
 
         long result = db.insert(TABLE_EMPLOYEE, null, contentValues);
 
@@ -99,30 +97,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean addNewClinic(String name){
+    public boolean addNewClinic(String name, String checkedBool){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CLINIC, name);
-        ContentValues contentValues2 = new ContentValues();
-        contentValues2.put(SERVICES, "");
+        contentValues.put(ICHECKED, checkedBool);
+        contentValues.put(ISELECTED, "");
+        contentValues.put(SERVICES, "");
 
-        long result = db.insert(TABLE_CLINIC_NAME, null, contentValues);
-        long result2 = db.insert(TABLE_CLINIC_SERVICES, null, contentValues2);
+        long result = db.insert(TABLE_CLINIC, null, contentValues);
 
-        if (result == -1 && result2 == -1){
+        if (result == -1){
             return false;
         } else {
             return true;
         }
     }
 
-    public void updateService(String serviceList, int id, String oldList){
+    public boolean addService(String name){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE_CLINIC_SERVICES + " SET " + SERVICES + " = \"" + serviceList +
-                "\" WHERE " + COL1 + " = \"" + id + "\" AND " + SERVICES + " = \"" + oldList + "\"";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SERVICES, name);
+
+        long result = db.insert(TABLE_SERVICES, null, contentValues);
+
+        if (result == -1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void updateService(String newService, int id, String oldService){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_SERVICES + " SET " + SERVICES + " = \"" + newService +
+                "\" WHERE " + COL1 + " = \"" + id + "\" AND " + SERVICES + " = \"" + oldService + "\"";
         Log.d(TAG, "updateName: query: " + query);
-        Log.d(TAG, "updateName: Setting services to " + serviceList);
+        Log.d(TAG, "updateName: Setting services to " + newService);
         db.execSQL(query);
+    }
+
+    public void updateClinic(String name, String bools, String ints){
+        SQLiteDatabase db = this.getWritableDatabase();
+        //String query = "UPDATE " + TABLE_CLINIC + " SET " + ICHECKED + " = \"" + bools + "\" AND " + ISELECTED + " = \"" + ints +
+        //        "\" WHERE " + CLINIC + " = \"" + name + "\"" ;
+        //Log.d(TAG, "updateName: query: " + query);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ICHECKED, bools);
+        contentValues.put(ISELECTED, ints);
+        db.update(TABLE_CLINIC, contentValues, CLINIC +"=?", new String[]{name});
+        //db.execSQL(query);
     }
 
     public Cursor getData(){
@@ -141,14 +165,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getClinicData(){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_CLINIC_NAME;
+        String query = "SELECT * FROM " + TABLE_CLINIC;
         Cursor data = db.rawQuery(query, null);
         return data;
     }
 
     public Cursor getServiceData(){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_CLINIC_SERVICES;
+        String query = "SELECT * FROM " + TABLE_SERVICES;
         Cursor data = db.rawQuery(query, null);
         return data;
     }
@@ -167,9 +191,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    public Cursor getEmployee(String user){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_EMPLOYEE + " WHERE " + COL8 + " = \"" + user + "\"";
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
     public Cursor getClinicID(String name){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT " + COL1 + " FROM "+TABLE_CLINIC_NAME+" WHERE " + CLINIC + " = \"" + name + "\"";
+        String query = "SELECT " + COL1 + " FROM "+TABLE_CLINIC+" WHERE " + CLINIC + " = \"" + name + "\"";
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
+    public Cursor getServiceID(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT " + COL1 + " FROM "+TABLE_SERVICES+" WHERE " + SERVICES + " = \"" + name + "\"";
         Cursor data = db.rawQuery(query, null);
         return data;
     }
@@ -185,6 +223,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteNameA(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_EMPLOYEE + " WHERE " + COL1 + " = \"" + id + "\"";
+        Log.d(TAG, "deleteName: query: "+ query);
+        Log.d(TAG, "deleteName: Deleting: "+ id + " from database.");
+        db.execSQL(query);
+    }
+
+    public void deleteClinic(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_CLINIC + " WHERE " + COL1 + " = \"" + id + "\"";
+        Log.d(TAG, "deleteName: query: "+ query);
+        Log.d(TAG, "deleteName: Deleting: "+ id + " from database.");
+        db.execSQL(query);
+    }
+
+    public void deleteService(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_SERVICES + " WHERE " + COL1 + " = \"" + id + "\"";
         Log.d(TAG, "deleteName: query: "+ query);
         Log.d(TAG, "deleteName: Deleting: "+ id + " from database.");
         db.execSQL(query);

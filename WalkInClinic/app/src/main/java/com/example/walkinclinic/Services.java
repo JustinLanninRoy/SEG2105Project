@@ -27,12 +27,8 @@ public class Services extends AppCompatActivity {
     Button addService;
     ListView services;
     DatabaseHelper databaseHelper;
-    int selectedID;
-    String selectedClinic;
     String service;
     String role;
-    String[] split;
-    String list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +40,6 @@ public class Services extends AppCompatActivity {
         addService = findViewById(R.id.addService);
         services = findViewById(R.id.services);
         databaseHelper = new DatabaseHelper(this);
-        Intent received = getIntent();
-        selectedID = received.getIntExtra("id", -1);
-        selectedClinic = received.getStringExtra("name");
-        title.setText(selectedClinic + " Services");
 
         addService.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -59,11 +51,8 @@ public class Services extends AppCompatActivity {
                 while (data.moveToNext()){
                     listData.add(data.getString(1));
                 }
-                String list = listData.get(selectedID-1);
 
-                String[] split = list.split(", ");
-
-                int x = invalidService(service, role, split);
+                int x = invalidService(service, role, listData);
                 if (x == 1){
                     toastMessage("Please type a new service to add it");
                     return;
@@ -75,14 +64,8 @@ public class Services extends AppCompatActivity {
                     return;
                 }
 
-                if (list.equals("")){
-                    databaseHelper.updateService(list + service + ": " + role, selectedID, list);
-                } else {
-                    databaseHelper.updateService(list + ", " + service  + ": " + role, selectedID, list);
-                }
+                databaseHelper.addService(service + ": " + role);
                 Intent i = new Intent(Services.this, Services.class);
-                i.putExtra("id", selectedID);
-                i.putExtra("name", selectedClinic);
                 startActivity(i);
             }
         });
@@ -90,7 +73,7 @@ public class Services extends AppCompatActivity {
         populateListView();
     }
 
-    public int invalidService(String service, String role, String[] services){
+    public int invalidService(String service, String role, ArrayList<String> services){
         int flag = 0;
         if (service.equals("")){
             flag = 1;
@@ -116,33 +99,22 @@ public class Services extends AppCompatActivity {
             listData.add(data.getString(1));
         }
 
-        list = listData.get(selectedID-1);
-        split = list.split(", ");
-
-        if (list.equals("")){
-            return;
-        }
-
-        ArrayList<String> serviceData = new ArrayList<>();
-
-        for (String s: split){
-            serviceData.add(s);
-        }
-
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, serviceData);
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
         services.setAdapter(adapter);
 
         services.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = adapterView.getItemAtPosition(i).toString();
+                Cursor data = databaseHelper.getServiceID(name);
+                int selectedID = -1;
+                while (data.moveToNext()){
+                    selectedID = data.getInt(0);
+                }
                 Log.d(TAG, "onItemClick: You Clicked on " + name);
                 Intent x = new Intent(Services.this, ChangeService.class);
-                x.putExtra("oldList", list);
-                x.putExtra("splitList", split);
                 x.putExtra("id", selectedID);
                 x.putExtra("service", name);
-                x.putExtra("clinic", selectedClinic);
                 startActivity(x);
             }
         });

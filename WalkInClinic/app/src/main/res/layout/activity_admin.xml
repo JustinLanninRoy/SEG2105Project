@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:forceDarkAllowed="false"
-            android:password="false"
             android:shadowColor="#000000"
             android:text="Vital Care Admin"
             android:textAllCaps="false"
@@ -34,7 +33,7 @@
             android:id="@+id/adminInstructions"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Admin can choose whether to view a list of clinics, employees, or patients."
+            android:text="Admin can choose whether to view a list of clinics, services, employees, or patients."
             android:textAlignment="center" />
 
         <Button
@@ -44,6 +43,14 @@
             android:layout_marginTop="50dp"
             android:onClick="viewClinics"
             android:text="View Clinics" />
+
+        <Button
+            android:id="@+id/services"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:onClick="viewServices"
+            android:text="View Services" />
 
         <Button
             android:id="@+id/employees"

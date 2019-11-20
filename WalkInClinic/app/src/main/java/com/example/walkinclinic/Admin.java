@@ -30,4 +30,9 @@ public class Admin extends AppCompatActivity {
         i.putExtra("type", "patient");
         startActivity(i);
     }
+
+    public void viewServices(View view){
+        Intent i = new Intent(this, Services.class);
+        startActivity(i);
+    }
 }

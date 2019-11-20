@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class ClinicList extends AppCompatActivity {
 
     private static final String TAG = "ClinicList";
-    Button addClinic;
     DatabaseHelper databaseHelper;
     private ListView mListView;
 
@@ -29,16 +28,8 @@ public class ClinicList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clinic_list);
-        addClinic = findViewById(R.id.addClinic);
         databaseHelper = new DatabaseHelper(this);
         mListView = findViewById(R.id.clinicListView);
-
-        addClinic.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(ClinicList.this, AddClinic.class);
-                startActivity(i);
-            }
-        });
         populateListView();
     }
 
@@ -65,7 +56,7 @@ public class ClinicList extends AppCompatActivity {
                 }
                 if (itemID > -1) {
                     Log.d(TAG, "onItemClick: The ID is: " + itemID);
-                    Intent editScreenIntent = new Intent(ClinicList.this, Services.class);
+                    Intent editScreenIntent = new Intent(ClinicList.this, AdminsClinicProfile.class);
                     editScreenIntent.putExtra("id", itemID);
                     editScreenIntent.putExtra("name", name);
                     startActivity(editScreenIntent);
