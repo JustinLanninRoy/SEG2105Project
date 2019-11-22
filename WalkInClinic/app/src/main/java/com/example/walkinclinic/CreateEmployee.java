@@ -98,10 +98,18 @@ public class CreateEmployee extends CreatePerson {
         String postLogginString = ("Welcome Employee " + firstName.getText().toString() + "! You are logged-in.");
         String user = userName.getText().toString().trim();
         //opening the PostLoggin class and sending the message with it
-        Intent i = new Intent(this, PostLoggin.class);
-        i.putExtra("message", postLogginString);
-        i.putExtra("username", user);
-        startActivity(i);
+        toastMessage(user);
+        if (x == 2){
+            Intent i = new Intent(this, ClinicProfile.class);
+            i.putExtra("clinicName", clinic.getText().toString().trim());
+            i.putExtra("username", user);
+            startActivity(i);
+        } else {
+            Intent i = new Intent(this, PostLoggin.class);
+            i.putExtra("message", postLogginString);
+            i.putExtra("username", user);
+            startActivity(i);
+        }
         Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
     }
 

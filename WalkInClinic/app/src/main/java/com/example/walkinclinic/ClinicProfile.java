@@ -35,9 +35,11 @@ public class ClinicProfile extends AppCompatActivity {
     ArrayList<Integer> selectedPayments = new ArrayList<>();
     boolean[] checkedServices;
     ArrayList<Integer> selectedServices = new ArrayList<>();
+    ArrayList<String> allServices;
     DatabaseHelper db;
     String finalHours;
     String[] storedHours;
+    Boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class ClinicProfile extends AppCompatActivity {
 
         Intent received = getIntent();
         selectedClinic = received.getStringExtra("clinicName");
-        username = received.getStringExtra("userName");
+        username = received.getStringExtra("username");
         insuranceItems = getResources().getStringArray(R.array.insurance_types);
         paymentItems = getResources().getStringArray(R.array.payment_types);
         checkedItems = new boolean[insuranceItems.length];
@@ -72,10 +74,15 @@ public class ClinicProfile extends AppCompatActivity {
         String intServices = "";
 
         String hoursClinic = "";
+        int id = -1;
+
+        String storedPhone = "";
+        String storedAddress = "";
 
         Cursor data = db.getClinicData();
         while (data.moveToNext()){
             if (data.getString(1).equalsIgnoreCase(selectedClinic)){
+                id = data.getInt(0);
                 boolItems = data.getString(2);
                 intItems = data.getString(3);
                 boolPayments = data.getString(4);
@@ -83,10 +90,16 @@ public class ClinicProfile extends AppCompatActivity {
                 boolServices = data.getString(6);
                 intServices = data.getString(7);
                 hoursClinic = data.getString(8);
+                storedPhone = data.getString(9);
+                storedAddress = data.getString(10);
             }
         }
+        title.setText(selectedClinic + " – ClinicID: " + id);
+        phone.setText(storedPhone);
+        address.setText(storedAddress);
+
         Cursor serviceData = db.getServiceData();
-        ArrayList<String> allServices = new ArrayList<>();
+        allServices = new ArrayList<>();
         while (serviceData.moveToNext()){
             allServices.add(serviceData.getString(1));
         }
@@ -97,51 +110,12 @@ public class ClinicProfile extends AppCompatActivity {
         checkedServices = new boolean[allServices.size()];
         storedHours = hoursClinic.split(", ");
 
-        //turn into separate function later
-        String[] temp = boolItems.split(", ");
-        for (int i = 0; i < insuranceItems.length; i++){
-            if (temp[i].equalsIgnoreCase("true")){
-                checkedItems[i] = true;
-            } else {
-                checkedItems[i] = false;
-            }
-        }
-        temp = intItems.split(", ");
-        for (String s: temp){
-            if (!s.equals("")){
-                selectedItems.add(Integer.parseInt(s));
-            }
-        }
-
-        temp = boolPayments.split(", ");
-        for (int i = 0; i < paymentItems.length; i++){
-            if (temp[i].equalsIgnoreCase("true")){
-                checkedPayments[i] = true;
-            } else {
-                checkedPayments[i] = false;
-            }
-        }
-        temp = intPayments.split(", ");
-        for (String s: temp){
-            if (!s.equals("")){
-                selectedPayments.add(Integer.parseInt(s));
-            }
-        }
-
-        temp = boolServices.split(", ");
-        for (int i = 0; i < allServices.size(); i++){
-            if (i < temp.length){
-                if (temp[i].equals("true")){
-                    checkedServices[i] = true;
-                }
-            }
-        }
-        temp = intServices.split(", ");
-        for (String s: temp){
-            if (!s.equals("")){
-                selectedServices.add(Integer.parseInt(s));
-            }
-        }
+        checkedItems = updateBools(boolItems.split(", "), checkedItems, insuranceItems.length);
+        checkedPayments = updateBools(boolPayments.split(", "), checkedPayments, paymentItems.length);
+        checkedServices = updateBools(boolServices.split(", "), checkedServices, allServices.size());
+        selectedItems = updateInts(intItems.split(", "), selectedItems);
+        selectedPayments = updateInts(intPayments.split(", "), selectedPayments);
+        selectedServices = updateInts(intServices.split(", "), selectedServices);
 
         insurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -333,6 +307,15 @@ public class ClinicProfile extends AppCompatActivity {
                 hBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //do nothing, override later
+                    }
+                });
+                hBuilder.setView(mView);
+                final AlertDialog dialog = hBuilder.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         String monA = mAM.getText().toString().trim();
                         String monP = mPM.getText().toString().trim();
                         String tueA = tuAM.getText().toString().trim();
@@ -348,94 +331,146 @@ public class ClinicProfile extends AppCompatActivity {
                         String sunA = suAM.getText().toString().trim();
                         String sunP = suPM.getText().toString().trim();
                         String[] times = new String[]{monA, monP, tueA, tueP, wedA, wedP, thuA, thuP, friA, friP, satA, satP, sunA, sunP};
-                        //validation can be its own method
-                        for (int i = 0; i < times.length; i++){
-                            if (times[i].equals("")){
-                                toastMessage("Please ensure each field is filled in.");
-                                return;
-                            }
-                            if (times[i].equals("*")){
-                                if (i%2 == 0){
-                                    if (!times[i+1].equals("*")){
-                                        toastMessage("If there are days the clinic is closed, please enter '*' in BOTH time slots.");
-                                        return;
-                                    }
-                                } else {
-                                    if (!times[i-1].equals("*")){
-                                        toastMessage("If there are days the clinic is closed, please enter '*' in BOTH time slots.");
-                                        return;
-                                    }
-                                }
-                            }
-                            if (times[i].length() == 5){
-                                if (!Character.isDigit(times[i].charAt(0)) || !Character.isDigit(times[i].charAt(1)) || times[i].charAt(2) != ':' || !Character.isDigit(times[i].charAt(3)) || !Character.isDigit(times[i].charAt(4))){
-                                    toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
-                                    return;
-                                }
-                            } else if (times[i].length() == 1) {
-                                if (!times[i].equals("*")){
-                                    toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
-                                    return;
-                                }
-                            } else {
-                                toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
-                                return;
-                            }
-                            if (!times[i].equals("*")) {
-                                if (Integer.parseInt(times[i].split(":")[0])>12 || Integer.parseInt(times[i].split(":")[1])>60) {
-                                    toastMessage("Please ensure the times you entered are valid on the 12 hour clock.");
-                                    return;
-                                }
-                            }
+                        if (hoursValid(times)){
+                            storedHours = times;
+                            flag = true;
+                            dialog.dismiss();
                         }
-                        storedHours = times;
                     }
                 });
-                hBuilder.setView(mView);
-                AlertDialog dialog = hBuilder.create();
-                dialog.show();
             }
         });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //make method out of this stuff
-                String checkBools = "";
-                String checkints = "";
-                for (Boolean b: checkedItems){
-                    checkBools = checkBools + b + ", ";
-                }
-                for (int i: selectedItems){
-                    checkints = checkints + i + ", ";
-                }
-                String paymentsBools = "";
-                String paymentints = "";
-                for (Boolean b: checkedPayments){
-                    paymentsBools = paymentsBools + b + ", ";
-                }
-                for (int i: selectedPayments){
-                    paymentints = paymentints + i + ", ";
-                }
-                String servicesBools = "";
-                String servicesints = "";
-                for (Boolean b: checkedServices){
-                    servicesBools = servicesBools + b + ", ";
-                }
-                for (int i: selectedServices){
-                    servicesints = servicesints + i + ", ";
-                }
+                String checkBools = createBoolStrings(checkedItems);
+                String checkints = createIntStrings(selectedItems);
+                String paymentsBools = createBoolStrings(checkedPayments);
+                String paymentints = createIntStrings(selectedPayments);
+                String servicesBools = createBoolStrings(checkedServices);
+                String servicesints = createIntStrings(selectedServices);
                 finalHours = "";
                 for (String s: storedHours){
                     finalHours = finalHours + s + ", ";
                 }
-                db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours);
-                Intent i = new Intent(ClinicProfile.this, Employee.class);
-                i.putExtra("username", username);
-                startActivity(i);
+                if (valid()){
+                    db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours, phone.getText().toString().trim(), address.getText().toString().trim());
+                    Intent i = new Intent(ClinicProfile.this, Employee.class);
+                    i.putExtra("username", username);
+                    startActivity(i);
+                }
             }
         });
     }
+
+    public boolean[] updateBools(String[] bools, boolean[] checked, int x){
+        for (int i = 0; i < x; i++){
+            if (bools[i].equalsIgnoreCase("true")){
+                checked[i] = true;
+            } else {
+                checked[i] = false;
+            }
+        }
+        return checked;
+    }
+
+    public ArrayList<Integer> updateInts(String[] ints, ArrayList<Integer> selected){
+        for (String s: ints) {
+            if (!s.equals("")) {
+                selected.add(Integer.parseInt(s));
+            }
+        }
+        return selected;
+    }
+
+    public Boolean hoursValid(String[] times){
+        for (int i = 0; i < times.length; i++){
+            if (times[i].equals("")){
+                toastMessage("Please ensure each field is filled in.");
+                return false;
+            }
+            if (times[i].equals("*")){
+                if (i%2 == 0){
+                    if (!times[i+1].equals("*")){
+                        toastMessage("If there are days the clinic is closed, please enter '*' in BOTH time slots.");
+                        return false;
+                    }
+                } else {
+                    if (!times[i-1].equals("*")){
+                        toastMessage("If there are days the clinic is closed, please enter '*' in BOTH time slots.");
+                        return false;
+                    }
+                }
+            }
+            if (times[i].length() == 5){
+                if (!Character.isDigit(times[i].charAt(0)) || !Character.isDigit(times[i].charAt(1)) || times[i].charAt(2) != ':' || !Character.isDigit(times[i].charAt(3)) || !Character.isDigit(times[i].charAt(4))){
+                    toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
+                    return false;
+                }
+            } else if (times[i].length() == 1) {
+                if (!times[i].equals("*")){
+                    toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
+                    return false;
+                }
+            } else {
+                toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
+                return false;
+            }
+            if (!times[i].equals("*")) {
+                if (Integer.parseInt(times[i].split(":")[0])>12 || Integer.parseInt(times[i].split(":")[1])>60) {
+                    toastMessage("Please ensure the times you entered are valid on the 12 hour clock.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public String createBoolStrings(boolean[] checked){
+        String ret = "";
+        for (Boolean b: checked){
+            ret = ret + b + ", ";
+        }
+        return ret;
+    }
+
+    public String createIntStrings(ArrayList<Integer> selected){
+        String ret = "";
+        for (int b: selected){
+            ret = ret + b + ", ";
+        }
+        return ret;
+    }
+
+    public boolean valid(){
+        if(!phone.getText().toString().trim().replace("-", "").matches("[0-9]+") || phone.getText().toString().trim().length() != 12){
+            toastMessage("Please use only numbers in the XXX-XXX-XXXX format.");
+            return false;
+        }
+        if (address.getText().toString().trim().isEmpty() || address.getText().toString().trim().equalsIgnoreCase("address")){
+            toastMessage("Please fill in the address field.");
+            return false;
+        }
+        if (selectedItems.size() < 1){
+            toastMessage("Please select at least one insurance company that your clinic accepts.");
+            return false;
+        }
+        if (selectedPayments.size() < 1){
+            toastMessage("Please select at least one payment method that your clinic accepts.");
+            return false;
+        }
+        if (allServices.size() > 0 && selectedServices.size() < 1){
+            toastMessage("Please select at least one service that your clinic offers.");
+            return false;
+        }
+        if (!flag){
+            toastMessage("Please verify your clinic's hours are correct.");
+            return false;
+        }
+        return true;
+    }
+
     private void toastMessage(String message){
         Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
     }

@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + COL4 + " TEXT, " + COL5 + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
     private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
-    private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + PCHECKED + " TEXT, " + PSELECTED + " TEXT, " + SERVICESBOOL + " TEXT, " + SERVICESINT + " TEXT, " + HOURS + " TEXT)";
+    private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + PCHECKED + " TEXT, " + PSELECTED + " TEXT, " + SERVICESBOOL + " TEXT, " + SERVICESINT + " TEXT, " + HOURS + " TEXT, " + COL7 + " TEXT, " + COL4 + " TEXT)";
     private String createTableC = "CREATE TABLE " + TABLE_SERVICES + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SERVICES + " TEXT)";
 
     public DatabaseHelper(Context context){
@@ -113,6 +113,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(SERVICESBOOL, "");
         contentValues.put(SERVICESINT, "");
         contentValues.put(HOURS, times);
+        contentValues.put(COL7, "Phone");
+        contentValues.put(COL4, "Address");
 
         long result = db.insert(TABLE_CLINIC, null, contentValues);
 
@@ -146,7 +148,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void updateClinic(String name, String bools, String ints, String pbools, String pints, String sbools, String sints, String hours){
+    public void updateClinic(String name, String bools, String ints, String pbools, String pints, String sbools, String sints, String hours, String phone, String address){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ICHECKED, bools);
@@ -156,6 +158,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(SERVICESBOOL, sbools);
         contentValues.put(SERVICESINT, sints);
         contentValues.put(HOURS, hours);
+        contentValues.put(COL7, phone);
+        contentValues.put(COL4, address);
         db.update(TABLE_CLINIC, contentValues, CLINIC +"=?", new String[]{name});
     }
 

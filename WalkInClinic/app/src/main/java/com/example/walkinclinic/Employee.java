@@ -50,7 +50,7 @@ public class Employee extends AppCompatActivity {
     public void clinicProfile(View view){
         Intent i = new Intent(this, ClinicProfile.class);
         i.putExtra("clinicName", clinicName);
-        i.putExtra("userName", username);
+        i.putExtra("username", username);
         startActivity(i);
     }
 }
