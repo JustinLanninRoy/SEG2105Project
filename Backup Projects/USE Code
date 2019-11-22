@@ -1,0 +1,80 @@
+model WalkInClinic
+
+class CreatePerson
+attributes
+	firstName: String
+	lastName: String
+	Email: String
+	Phone: String
+	userName: String
+	userPassword: String 
+end
+
+class CreatePatient < CreatePerson
+attributes
+	_fName: String
+	_lName: String
+	_address: String
+	_age: String
+	_email: String
+	_phone: String
+	_user: String
+	_password: String
+end
+
+class ClinicProfile
+attributes
+	phone: String
+	address: String
+	insuranceItems: String
+	paymentItems: String
+	services: String
+	finalHours: String
+	usename: String
+end
+
+class Admin
+attributes
+end
+
+class CreateEmployee < CreatePerson
+attributes
+end
+
+class Services
+attributes
+	newService: String
+	serviceRole: String
+	selectedID: Integer 
+	selectedClinic: String
+	Service: String  
+	Role: String  
+	Split: String
+	List: String 
+end
+
+association edit between
+	CreatePatient[*] 
+	Admin[*] 
+end
+
+association can_offers between
+	Services[*]
+	ClinicProfile[1]
+end
+
+association can_deletes between
+	CreateEmployee[*]
+	Admin[*]
+end
+
+
+association Manages_add_edit_delete between
+	Services[*] 
+	Admin[*] 
+end
+
+association can_do between
+	Services[*] 
+	CreateEmployee[*] 
+end
