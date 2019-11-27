@@ -133,7 +133,7 @@ public class CreateEmployee extends CreatePerson {
         }
         databaseHelper.addDataA(fName, lName, pos, email, phone, user, password);
         if (x == 2) {
-            String times = "00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00, 00:00";
+            String times = "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0";
             databaseHelper.addNewClinic(pos, checked, checkedPayments, times);
         }
     }

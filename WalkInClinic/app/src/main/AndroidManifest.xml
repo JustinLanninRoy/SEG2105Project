@@ -5,6 +5,12 @@
 
     <dist:module dist:instant="true" />
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +18,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ClinicProfile"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        <uses-library android:name="com.google.android.maps"/>
+        <activity android:name=".EmployeesHours"></activity>
+        <activity android:name=".ClinicProfile" />
         <activity android:name=".Employee" />
         <activity android:name=".AdminsClinicProfile" />
         <activity android:name=".ChangeService" />
@@ -26,6 +40,7 @@
         <activity android:name=".PostLoggin" />
         <activity android:name=".CreatePatient" />
         <activity android:name=".CreateEmployee" />
+        <activity android:name=".MapActivity" />
         <activity
             android:name=".Services"
             android:parentActivityName=".ClinicList" />

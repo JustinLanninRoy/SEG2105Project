@@ -69,5 +69,12 @@
                 android:onClick="clinicProfile"
                 android:text="Edit Clinic Profile" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/myHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="myHours"
+            android:text="View My Hours" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

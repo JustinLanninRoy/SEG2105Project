@@ -35,6 +35,7 @@
     <string name="ok_label">OK</string>
     <string name="dialog_title">Insurance Types</string>
     <string name="dismiss_label">Dismiss</string>
+    <string name="api_key">AIzaSyBmKYU-1h6K_qoQDJckAzZpduvsWPgaJts</string>
     <string name="clear_all_label">Clear All</string>
     <string-array name="insurance_types">
         <item>Manulife</item>
@@ -55,5 +56,20 @@
         <item>Cash</item>
         <item>E-Transfer</item>
         <item>PayPal</item>
+    </string-array>
+    <string-array name="times">
+        <item>Closed</item>
+        <item>12:00</item>
+        <item>01:00</item>
+        <item>02:00</item>
+        <item>03:00</item>
+        <item>04:00</item>
+        <item>05:00</item>
+        <item>06:00</item>
+        <item>07:00</item>
+        <item>08:00</item>
+        <item>09:00</item>
+        <item>10:00</item>
+        <item>11:00</item>
     </string-array>
 </resources>

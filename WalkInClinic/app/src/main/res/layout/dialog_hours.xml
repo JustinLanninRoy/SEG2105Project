@@ -20,6 +20,27 @@
         android:gravity="center_horizontal"
         android:text="Please specify your clinic's working hours. If there is a day where your clinic is closed, please enter * for both time slots that day." />
 
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,22 +48,18 @@
 
         <TextView
             android:id="@+id/textView13"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="Monday"
-            android:textColor="#030202"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editText7"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:text="Mon:"
+            android:textColor="#030202"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView15"
@@ -50,24 +67,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="AM to"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/editText9"
-            android:layout_width="50dp"
+        <Spinner
+            android:id="@+id/spinner3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView17"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PM"
-            android:textColor="#050101" />
+            android:textColor="#050101"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -77,22 +93,18 @@
 
         <TextView
             android:id="@+id/textView33"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="Tuesday"
-            android:textColor="#030202"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editText77"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:text="Tues:"
+            android:textColor="#030202"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView55"
@@ -100,24 +112,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="AM to"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/editText99"
-            android:layout_width="50dp"
+        <Spinner
+            android:id="@+id/spinner5"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView11"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PM"
-            android:textColor="#050101" />
+            android:textColor="#050101"
+            android:textSize="12sp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -127,22 +139,18 @@
 
         <TextView
             android:id="@+id/textView21"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="Wednesday"
-            android:textColor="#030202"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editText23"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:text="Wed:"
+            android:textColor="#030202"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView24"
@@ -150,24 +158,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="AM to"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/editText25"
-            android:layout_width="50dp"
+        <Spinner
+            android:id="@+id/spinner7"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView26"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PM"
-            android:textColor="#050101" />
+            android:textColor="#050101"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -177,22 +184,18 @@
 
         <TextView
             android:id="@+id/textView27"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="Thursday"
-            android:textColor="#030202"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editText28"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:text="Thurs:"
+            android:textColor="#030202"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView29"
@@ -200,24 +203,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="AM to"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/editText30"
-            android:layout_width="50dp"
+        <Spinner
+            android:id="@+id/spinner9"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView31"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PM"
-            android:textColor="#050101" />
+            android:textColor="#050101"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -227,22 +229,18 @@
 
         <TextView
             android:id="@+id/textView32"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="Friday"
-            android:textColor="#030202"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editText34"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:text="Fri:"
+            android:textColor="#030202"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView35"
@@ -250,24 +248,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="AM to"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/editText36"
-            android:layout_width="50dp"
+        <Spinner
+            android:id="@+id/spinner11"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView37"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PM"
-            android:textColor="#050101" />
+            android:textColor="#050101"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -277,22 +274,18 @@
 
         <TextView
             android:id="@+id/textView38"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="Saturday"
-            android:textColor="#030202"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editText39"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:text="Sat:"
+            android:textColor="#030202"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView40"
@@ -300,24 +293,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="AM to"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/editText41"
-            android:layout_width="50dp"
+        <Spinner
+            android:id="@+id/spinner13"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView42"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PM"
-            android:textColor="#050101" />
+            android:textColor="#050101"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -327,22 +319,18 @@
 
         <TextView
             android:id="@+id/textView43"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="Sunday"
-            android:textColor="#030202"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editText45"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:text="Sun:"
+            android:textColor="#030202"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinner14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView46"
@@ -350,24 +338,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="AM to"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/editText47"
-            android:layout_width="50dp"
+        <Spinner
+            android:id="@+id/spinner15"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="00:00"
-            android:inputType="textPersonName" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textView48"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PM"
-            android:textColor="#050101" />
+            android:textColor="#050101"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

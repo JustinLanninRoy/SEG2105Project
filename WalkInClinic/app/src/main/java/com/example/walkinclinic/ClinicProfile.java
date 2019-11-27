@@ -3,27 +3,34 @@ package com.example.walkinclinic;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import java.util.ArrayList;
 
-public class ClinicProfile extends AppCompatActivity {
+public class ClinicProfile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView title;
     EditText phone;
-    EditText address;
     Button insurance;
     Button payment;
     Button services;
     Button hours;
     Button save;
+    Button address;
 
     String selectedClinic;
     String username;
@@ -41,6 +48,8 @@ public class ClinicProfile extends AppCompatActivity {
     String[] storedHours;
     Boolean flag = false;
 
+    private static final int ERROR_DIALOG_REQUEST = 9001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +57,16 @@ public class ClinicProfile extends AppCompatActivity {
 
         title = findViewById(R.id.textView11);
         phone = findViewById(R.id.editText);
-        address = findViewById(R.id.editText6);
         insurance = findViewById(R.id.button5);
         payment = findViewById(R.id.button6);
         services = findViewById(R.id.button7);
         hours = findViewById(R.id.button8);
         save = findViewById(R.id.button9);
+        address = findViewById(R.id.button10);
+
+        if (isServicesOK()){
+            init();
+        }
 
         Intent received = getIntent();
         selectedClinic = received.getStringExtra("clinicName");
@@ -94,9 +107,11 @@ public class ClinicProfile extends AppCompatActivity {
                 storedAddress = data.getString(10);
             }
         }
-        title.setText(selectedClinic + " – ClinicID: " + id);
-        phone.setText(storedPhone);
-        address.setText(storedAddress);
+        title.setText("Clinic: " + selectedClinic);
+        if (!storedPhone.equals("Phone")){
+            phone.setText(storedPhone);
+            address.setText(storedAddress);
+        }
 
         Cursor serviceData = db.getServiceData();
         allServices = new ArrayList<>();
@@ -272,37 +287,68 @@ public class ClinicProfile extends AppCompatActivity {
             public void onClick(View v) {
                 final AlertDialog.Builder hBuilder = new AlertDialog.Builder(ClinicProfile.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_hours, null);
-                final EditText mAM = mView.findViewById(R.id.editText7);
-                final EditText mPM = mView.findViewById(R.id.editText9);
-                final EditText tuAM = mView.findViewById(R.id.editText77);
-                final EditText tuPM = mView.findViewById(R.id.editText99);
-                final EditText wAM = mView.findViewById(R.id.editText23);
-                final EditText wPM = mView.findViewById(R.id.editText25);
-                final EditText thAM = mView.findViewById(R.id.editText28);
-                final EditText thPM = mView.findViewById(R.id.editText30);
-                final EditText fAM = mView.findViewById(R.id.editText34);
-                final EditText fPM = mView.findViewById(R.id.editText36);
-                final EditText saAM = mView.findViewById(R.id.editText39);
-                final EditText saPM = mView.findViewById(R.id.editText41);
-                final EditText suAM = mView.findViewById(R.id.editText45);
-                final EditText suPM = mView.findViewById(R.id.editText47);
+                final Spinner mAM = mView.findViewById(R.id.spinner2);
+                final Spinner mPM = mView.findViewById(R.id.spinner3);
+                final Spinner tuAM = mView.findViewById(R.id.spinner4);
+                final Spinner tuPM = mView.findViewById(R.id.spinner5);
+                final Spinner wAM = mView.findViewById(R.id.spinner6);
+                final Spinner wPM = mView.findViewById(R.id.spinner7);
+                final Spinner thAM = mView.findViewById(R.id.spinner8);
+                final Spinner thPM = mView.findViewById(R.id.spinner9);
+                final Spinner fAM = mView.findViewById(R.id.spinner10);
+                final Spinner fPM = mView.findViewById(R.id.spinner11);
+                final Spinner saAM = mView.findViewById(R.id.spinner12);
+                final Spinner saPM = mView.findViewById(R.id.spinner13);
+                final Spinner suAM = mView.findViewById(R.id.spinner14);
+                final Spinner suPM = mView.findViewById(R.id.spinner15);
 
-                if (storedHours.length > 1){
-                    mAM.setText(storedHours[0]);
-                    mPM.setText(storedHours[1]);
-                    tuAM.setText(storedHours[2]);
-                    tuPM.setText(storedHours[3]);
-                    wAM.setText(storedHours[4]);
-                    wPM.setText(storedHours[5]);
-                    thAM.setText(storedHours[6]);
-                    thPM.setText(storedHours[7]);
-                    fAM.setText(storedHours[8]);
-                    fPM.setText(storedHours[9]);
-                    saAM.setText(storedHours[10]);
-                    saPM.setText(storedHours[11]);
-                    suAM.setText(storedHours[12]);
-                    suPM.setText(storedHours[13]);
-                }
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ClinicProfile.this, R.array.times, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mAM.setAdapter(adapter);
+                mPM.setAdapter(adapter);
+                tuAM.setAdapter(adapter);
+                tuPM.setAdapter(adapter);
+                wAM.setAdapter(adapter);
+                wPM.setAdapter(adapter);
+                thAM.setAdapter(adapter);
+                thPM.setAdapter(adapter);
+                fAM.setAdapter(adapter);
+                fPM.setAdapter(adapter);
+                saAM.setAdapter(adapter);
+                saPM.setAdapter(adapter);
+                suAM.setAdapter(adapter);
+                suPM.setAdapter(adapter);
+
+                mAM.setSelection(Integer.parseInt(storedHours[0]));
+                mPM.setSelection(Integer.parseInt(storedHours[1]));
+                tuAM.setSelection(Integer.parseInt(storedHours[2]));
+                tuPM.setSelection(Integer.parseInt(storedHours[3]));
+                wAM.setSelection(Integer.parseInt(storedHours[4]));
+                wPM.setSelection(Integer.parseInt(storedHours[5]));
+                thAM.setSelection(Integer.parseInt(storedHours[6]));
+                thPM.setSelection(Integer.parseInt(storedHours[7]));
+                fAM.setSelection(Integer.parseInt(storedHours[8]));
+                fPM.setSelection(Integer.parseInt(storedHours[9]));
+                saAM.setSelection(Integer.parseInt(storedHours[10]));
+                saPM.setSelection(Integer.parseInt(storedHours[11]));
+                suAM.setSelection(Integer.parseInt(storedHours[12]));
+                suPM.setSelection(Integer.parseInt(storedHours[13]));
+
+                mAM.setOnItemSelectedListener(ClinicProfile.this);
+                mPM.setOnItemSelectedListener(ClinicProfile.this);
+                tuAM.setOnItemSelectedListener(ClinicProfile.this);
+                tuPM.setOnItemSelectedListener(ClinicProfile.this);
+                wAM.setOnItemSelectedListener(ClinicProfile.this);
+                wPM.setOnItemSelectedListener(ClinicProfile.this);
+                thAM.setOnItemSelectedListener(ClinicProfile.this);
+                thPM.setOnItemSelectedListener(ClinicProfile.this);
+                fAM.setOnItemSelectedListener(ClinicProfile.this);
+                fPM.setOnItemSelectedListener(ClinicProfile.this);
+                saAM.setOnItemSelectedListener(ClinicProfile.this);
+                saPM.setOnItemSelectedListener(ClinicProfile.this);
+                suAM.setOnItemSelectedListener(ClinicProfile.this);
+                suPM.setOnItemSelectedListener(ClinicProfile.this);
+
 
                 hBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -316,20 +362,20 @@ public class ClinicProfile extends AppCompatActivity {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String monA = mAM.getText().toString().trim();
-                        String monP = mPM.getText().toString().trim();
-                        String tueA = tuAM.getText().toString().trim();
-                        String tueP = tuPM.getText().toString().trim();
-                        String wedA = wAM.getText().toString().trim();
-                        String wedP = wPM.getText().toString().trim();
-                        String thuA = thAM.getText().toString().trim();
-                        String thuP = thPM.getText().toString().trim();
-                        String friA = fAM.getText().toString().trim();
-                        String friP = fPM.getText().toString().trim();
-                        String satA = saAM.getText().toString().trim();
-                        String satP = saPM.getText().toString().trim();
-                        String sunA = suAM.getText().toString().trim();
-                        String sunP = suPM.getText().toString().trim();
+                        String monA = String.valueOf(mAM.getSelectedItemPosition());
+                        String monP = String.valueOf(mPM.getSelectedItemPosition());
+                        String tueA = String.valueOf(tuAM.getSelectedItemPosition());
+                        String tueP = String.valueOf(tuPM.getSelectedItemPosition());
+                        String wedA = String.valueOf(wAM.getSelectedItemPosition());
+                        String wedP = String.valueOf(wPM.getSelectedItemPosition());
+                        String thuA = String.valueOf(thAM.getSelectedItemPosition());
+                        String thuP = String.valueOf(thPM.getSelectedItemPosition());
+                        String friA = String.valueOf(fAM.getSelectedItemPosition());
+                        String friP = String.valueOf(fPM.getSelectedItemPosition());
+                        String satA = String.valueOf(saAM.getSelectedItemPosition());
+                        String satP = String.valueOf(saPM.getSelectedItemPosition());
+                        String sunA = String.valueOf(suAM.getSelectedItemPosition());
+                        String sunP = String.valueOf(suPM.getSelectedItemPosition());
                         String[] times = new String[]{monA, monP, tueA, tueP, wedA, wedP, thuA, thuP, friA, friP, satA, satP, sunA, sunP};
                         if (hoursValid(times)){
                             storedHours = times;
@@ -386,41 +432,17 @@ public class ClinicProfile extends AppCompatActivity {
 
     public Boolean hoursValid(String[] times){
         for (int i = 0; i < times.length; i++){
-            if (times[i].equals("")){
-                toastMessage("Please ensure each field is filled in.");
-                return false;
-            }
-            if (times[i].equals("*")){
+            if (times[i].equals("0")){
                 if (i%2 == 0){
-                    if (!times[i+1].equals("*")){
-                        toastMessage("If there are days the clinic is closed, please enter '*' in BOTH time slots.");
+                    if (!times[i+1].equals("0")){
+                        toastMessage("If there are days the clinic is closed, please select 'Closed' for BOTH time slots.");
                         return false;
                     }
                 } else {
-                    if (!times[i-1].equals("*")){
-                        toastMessage("If there are days the clinic is closed, please enter '*' in BOTH time slots.");
+                    if (!times[i-1].equals("0")){
+                        toastMessage("If there are days the clinic is closed, please select 'Closed' for BOTH time slots.");
                         return false;
                     }
-                }
-            }
-            if (times[i].length() == 5){
-                if (!Character.isDigit(times[i].charAt(0)) || !Character.isDigit(times[i].charAt(1)) || times[i].charAt(2) != ':' || !Character.isDigit(times[i].charAt(3)) || !Character.isDigit(times[i].charAt(4))){
-                    toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
-                    return false;
-                }
-            } else if (times[i].length() == 1) {
-                if (!times[i].equals("*")){
-                    toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
-                    return false;
-                }
-            } else {
-                toastMessage("Please ensure times are written in the 00:00 format, or enter '*' for days that the clinic is closed.");
-                return false;
-            }
-            if (!times[i].equals("*")) {
-                if (Integer.parseInt(times[i].split(":")[0])>12 || Integer.parseInt(times[i].split(":")[1])>60) {
-                    toastMessage("Please ensure the times you entered are valid on the 12 hour clock.");
-                    return false;
                 }
             }
         }
@@ -448,10 +470,6 @@ public class ClinicProfile extends AppCompatActivity {
             toastMessage("Please use only numbers in the XXX-XXX-XXXX format.");
             return false;
         }
-        if (address.getText().toString().trim().isEmpty() || address.getText().toString().trim().equalsIgnoreCase("address")){
-            toastMessage("Please fill in the address field.");
-            return false;
-        }
         if (selectedItems.size() < 1){
             toastMessage("Please select at least one insurance company that your clinic accepts.");
             return false;
@@ -473,5 +491,38 @@ public class ClinicProfile extends AppCompatActivity {
 
     private void toastMessage(String message){
         Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private void init(){
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ClinicProfile.this, MapActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public boolean isServicesOK(){
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(ClinicProfile.this);
+        if (available == ConnectionResult.SUCCESS){
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(ClinicProfile.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        } else {
+            toastMessage("Can't make map requests.");
+        }
+        return false;
     }
 }

@@ -36,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String HOURS = "hours";
 
     private String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + COL4 + " TEXT, " + COL5 + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
-    private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
+    private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT, " + HOURS + " TEXT)";
     private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + PCHECKED + " TEXT, " + PSELECTED + " TEXT, " + SERVICESBOOL + " TEXT, " + SERVICESINT + " TEXT, " + HOURS + " TEXT, " + COL7 + " TEXT, " + COL4 + " TEXT)";
     private String createTableC = "CREATE TABLE " + TABLE_SERVICES + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SERVICES + " TEXT)";
 
@@ -92,6 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL7, phone);
         contentValues.put(COL8, user);
         contentValues.put(COL9, password);
+        contentValues.put(HOURS, "");
 
         long result = db.insert(TABLE_EMPLOYEE, null, contentValues);
 
@@ -161,6 +162,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL7, phone);
         contentValues.put(COL4, address);
         db.update(TABLE_CLINIC, contentValues, CLINIC +"=?", new String[]{name});
+    }
+
+    public void updateEmployeeHours(String username, String hours){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(HOURS, hours);
+        db.update(TABLE_EMPLOYEE, contentValues, COL8 +"=?", new String[]{username});
     }
 
     public Cursor getData(){
