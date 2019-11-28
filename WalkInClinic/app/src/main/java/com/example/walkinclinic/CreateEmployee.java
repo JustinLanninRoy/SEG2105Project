@@ -76,7 +76,7 @@ public class CreateEmployee extends CreatePerson {
 
     int checkClinic(){
         String work = clinic.getText().toString().trim();
-        Cursor data = databaseHelper.getClinicData();
+        Cursor data = databaseHelper.getExistingClinic(work);
         if (work.equals(y)){
             x = 2;
         } else {
@@ -98,7 +98,6 @@ public class CreateEmployee extends CreatePerson {
         String postLogginString = ("Welcome Employee " + firstName.getText().toString() + "! You are logged-in.");
         String user = userName.getText().toString().trim();
         //opening the PostLoggin class and sending the message with it
-        toastMessage(user);
         if (x == 2){
             Intent i = new Intent(this, ClinicProfile.class);
             i.putExtra("clinicName", clinic.getText().toString().trim());
@@ -121,18 +120,18 @@ public class CreateEmployee extends CreatePerson {
         String phone = Phone.getText().toString().trim();
         String user = userName.getText().toString().trim();
         String password = userPassword.getText().toString().trim();
-        boolean[] checkedItems = new boolean[getResources().getStringArray(R.array.insurance_types).length];
-        checked = "";
-        for (Boolean b: checkedItems){
-                checked = checked + b + ", ";
-        }
-        boolean[] payments = new boolean[getResources().getStringArray(R.array.payment_types).length];
-        String checkedPayments = "";
-        for (Boolean b: payments){
-            checkedPayments = checkedPayments + b + ", ";
-        }
         databaseHelper.addDataA(fName, lName, pos, email, phone, user, password);
         if (x == 2) {
+            boolean[] checkedItems = new boolean[getResources().getStringArray(R.array.insurance_types).length];
+            checked = "";
+            for (Boolean b: checkedItems){
+                checked = checked + b + ", ";
+            }
+            boolean[] payments = new boolean[getResources().getStringArray(R.array.payment_types).length];
+            String checkedPayments = "";
+            for (Boolean b: payments){
+                checkedPayments = checkedPayments + b + ", ";
+            }
             String times = "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0";
             databaseHelper.addNewClinic(pos, checked, checkedPayments, times);
         }

@@ -40,7 +40,6 @@
         <activity android:name=".PostLoggin" />
         <activity android:name=".CreatePatient" />
         <activity android:name=".CreateEmployee" />
-        <activity android:name=".MapActivity" />
         <activity
             android:name=".Services"
             android:parentActivityName=".ClinicList" />

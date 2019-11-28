@@ -7,6 +7,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,18 +22,26 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClinicProfile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView title;
     EditText phone;
-    Button insurance;
-    Button payment;
-    Button services;
-    Button hours;
-    Button save;
-    Button address;
+    EditText streetAddress;
+    EditText postalCode;
+    String boolItems = "";
+    String intItems = "";
+    String boolPayments = "";
+    String intPayments = "";
+    String boolServices = "";
+    String intServices = "";
+    String hoursClinic = "";
+    String storedPhone = "";
+    int id = -1;
 
     String selectedClinic;
     String username;
@@ -47,27 +58,22 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
     String finalHours;
     String[] storedHours;
     Boolean flag = false;
+    List<Address> list;
+    Double storedLat;
+    Double storedLong;
+    String[] adminServices;
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
+    //main too big
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clinic_profile);
-
         title = findViewById(R.id.textView11);
         phone = findViewById(R.id.editText);
-        insurance = findViewById(R.id.button5);
-        payment = findViewById(R.id.button6);
-        services = findViewById(R.id.button7);
-        hours = findViewById(R.id.button8);
-        save = findViewById(R.id.button9);
-        address = findViewById(R.id.button10);
-
-        if (isServicesOK()){
-            init();
-        }
-
+        streetAddress = findViewById(R.id.editText6);
+        postalCode = findViewById(R.id.editText7);
         Intent received = getIntent();
         selectedClinic = received.getStringExtra("clinicName");
         username = received.getStringExtra("username");
@@ -75,339 +81,309 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
         paymentItems = getResources().getStringArray(R.array.payment_types);
         checkedItems = new boolean[insuranceItems.length];
         checkedPayments = new boolean[paymentItems.length];
+        list = new ArrayList<>();
         db = new DatabaseHelper(this);
-
-        String boolItems = "";
-        String intItems = "";
-
-        String boolPayments = "";
-        String intPayments = "";
-
-        String boolServices = "";
-        String intServices = "";
-
-        String hoursClinic = "";
-        int id = -1;
-
-        String storedPhone = "";
-        String storedAddress = "";
-
-        Cursor data = db.getClinicData();
-        while (data.moveToNext()){
-            if (data.getString(1).equalsIgnoreCase(selectedClinic)){
-                id = data.getInt(0);
-                boolItems = data.getString(2);
-                intItems = data.getString(3);
-                boolPayments = data.getString(4);
-                intPayments = data.getString(5);
-                boolServices = data.getString(6);
-                intServices = data.getString(7);
-                hoursClinic = data.getString(8);
-                storedPhone = data.getString(9);
-                storedAddress = data.getString(10);
-            }
-        }
         title.setText("Clinic: " + selectedClinic);
-        if (!storedPhone.equals("Phone")){
-            phone.setText(storedPhone);
-            address.setText(storedAddress);
-        }
+        new LongRunningTask().execute();
+    }
 
-        Cursor serviceData = db.getServiceData();
-        allServices = new ArrayList<>();
-        while (serviceData.moveToNext()){
-            allServices.add(serviceData.getString(1));
-        }
-        final String[] adminServices = new String[allServices.size()];
-        for (int i = 0; i < allServices.size(); i++){
-            adminServices[i] = allServices.get(i);
-        }
-        checkedServices = new boolean[allServices.size()];
-        storedHours = hoursClinic.split(", ");
+    private class LongRunningTask extends AsyncTask<Void, Void, Void> {
 
-        checkedItems = updateBools(boolItems.split(", "), checkedItems, insuranceItems.length);
-        checkedPayments = updateBools(boolPayments.split(", "), checkedPayments, paymentItems.length);
-        checkedServices = updateBools(boolServices.split(", "), checkedServices, allServices.size());
-        selectedItems = updateInts(intItems.split(", "), selectedItems);
-        selectedPayments = updateInts(intPayments.split(", "), selectedPayments);
-        selectedServices = updateInts(intServices.split(", "), selectedServices);
-
-        insurance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder iBuilder = new AlertDialog.Builder(ClinicProfile.this);
-                iBuilder.setTitle(R.string.dialog_title);
-                iBuilder.setMultiChoiceItems(insuranceItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int position, boolean isChecked) {
-                        if (isChecked){
-                            if (!selectedItems.contains(position)){
-                                selectedItems.add(position);
-                            }
-                        } else if (selectedItems.contains(position)){
-                            selectedItems.remove(selectedItems.indexOf(position));
-                        }
-                    }
-                });
-                iBuilder.setCancelable(false);
-                iBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String item = "";
-                        for (int i = 0; i < selectedItems.size(); i++){
-                            item = item + insuranceItems[selectedItems.get(i)];
-                            if(i != selectedItems.size()-1){
-                                item = item + ", ";
-                            }
-                        }
-                    }
-                });
-                iBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                iBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < checkedItems.length; i++){
-                            checkedItems[i] = false;
-                            selectedItems.clear();
-                        }
-                    }
-                });
-                AlertDialog iDialog = iBuilder.create();
-                iDialog.show();
-            }
-        });
-
-        payment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder pBuilder = new AlertDialog.Builder(ClinicProfile.this);
-                pBuilder.setTitle("Payment Options");
-                pBuilder.setMultiChoiceItems(paymentItems, checkedPayments, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int position, boolean isChecked) {
-                        if (isChecked){
-                            if (!selectedPayments.contains(position)){
-                                selectedPayments.add(position);
-                            }
-                        } else if (selectedPayments.contains(position)){
-                            selectedPayments.remove(selectedPayments.indexOf(position));
-                        }
-                    }
-                });
-                pBuilder.setCancelable(false);
-                pBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String item = "";
-                        for (int i = 0; i < selectedPayments.size(); i++){
-                            item = item + paymentItems[selectedPayments.get(i)];
-                            if(i != selectedPayments.size()-1){
-                                item = item + ", ";
-                            }
-                        }
-                    }
-                });
-                pBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                pBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < checkedPayments.length; i++){
-                            checkedPayments[i] = false;
-                            selectedPayments.clear();
-                        }
-                    }
-                });
-                AlertDialog pDialog = pBuilder.create();
-                pDialog.show();
-            }
-        });
-
-        services.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder sBuilder = new AlertDialog.Builder(ClinicProfile.this);
-                sBuilder.setTitle("Available Services");
-                sBuilder.setMultiChoiceItems(adminServices, checkedServices, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int position, boolean isChecked) {
-                        if (isChecked){
-                            if (!selectedServices.contains(position)){
-                                selectedServices.add(position);
-                            }
-                        } else if (selectedServices.contains(position)){
-                            selectedServices.remove(selectedServices.indexOf(position));
-                        }
-                    }
-                });
-                sBuilder.setCancelable(false);
-                sBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String item = "";
-                        for (int i = 0; i < selectedServices.size(); i++){
-                            item = item + adminServices[selectedServices.get(i)];
-                            if(i != selectedServices.size()-1){
-                                item = item + ", ";
-                            }
-                        }
-                    }
-                });
-                sBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                sBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < checkedServices.length; i++){
-                            checkedPayments[i] = false;
-                            selectedServices.clear();
-                        }
-                    }
-                });
-                AlertDialog sDialog = sBuilder.create();
-                sDialog.show();
-            }
-        });
-
-        hours.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder hBuilder = new AlertDialog.Builder(ClinicProfile.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_hours, null);
-                final Spinner mAM = mView.findViewById(R.id.spinner2);
-                final Spinner mPM = mView.findViewById(R.id.spinner3);
-                final Spinner tuAM = mView.findViewById(R.id.spinner4);
-                final Spinner tuPM = mView.findViewById(R.id.spinner5);
-                final Spinner wAM = mView.findViewById(R.id.spinner6);
-                final Spinner wPM = mView.findViewById(R.id.spinner7);
-                final Spinner thAM = mView.findViewById(R.id.spinner8);
-                final Spinner thPM = mView.findViewById(R.id.spinner9);
-                final Spinner fAM = mView.findViewById(R.id.spinner10);
-                final Spinner fPM = mView.findViewById(R.id.spinner11);
-                final Spinner saAM = mView.findViewById(R.id.spinner12);
-                final Spinner saPM = mView.findViewById(R.id.spinner13);
-                final Spinner suAM = mView.findViewById(R.id.spinner14);
-                final Spinner suPM = mView.findViewById(R.id.spinner15);
-
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ClinicProfile.this, R.array.times, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mAM.setAdapter(adapter);
-                mPM.setAdapter(adapter);
-                tuAM.setAdapter(adapter);
-                tuPM.setAdapter(adapter);
-                wAM.setAdapter(adapter);
-                wPM.setAdapter(adapter);
-                thAM.setAdapter(adapter);
-                thPM.setAdapter(adapter);
-                fAM.setAdapter(adapter);
-                fPM.setAdapter(adapter);
-                saAM.setAdapter(adapter);
-                saPM.setAdapter(adapter);
-                suAM.setAdapter(adapter);
-                suPM.setAdapter(adapter);
-
-                mAM.setSelection(Integer.parseInt(storedHours[0]));
-                mPM.setSelection(Integer.parseInt(storedHours[1]));
-                tuAM.setSelection(Integer.parseInt(storedHours[2]));
-                tuPM.setSelection(Integer.parseInt(storedHours[3]));
-                wAM.setSelection(Integer.parseInt(storedHours[4]));
-                wPM.setSelection(Integer.parseInt(storedHours[5]));
-                thAM.setSelection(Integer.parseInt(storedHours[6]));
-                thPM.setSelection(Integer.parseInt(storedHours[7]));
-                fAM.setSelection(Integer.parseInt(storedHours[8]));
-                fPM.setSelection(Integer.parseInt(storedHours[9]));
-                saAM.setSelection(Integer.parseInt(storedHours[10]));
-                saPM.setSelection(Integer.parseInt(storedHours[11]));
-                suAM.setSelection(Integer.parseInt(storedHours[12]));
-                suPM.setSelection(Integer.parseInt(storedHours[13]));
-
-                mAM.setOnItemSelectedListener(ClinicProfile.this);
-                mPM.setOnItemSelectedListener(ClinicProfile.this);
-                tuAM.setOnItemSelectedListener(ClinicProfile.this);
-                tuPM.setOnItemSelectedListener(ClinicProfile.this);
-                wAM.setOnItemSelectedListener(ClinicProfile.this);
-                wPM.setOnItemSelectedListener(ClinicProfile.this);
-                thAM.setOnItemSelectedListener(ClinicProfile.this);
-                thPM.setOnItemSelectedListener(ClinicProfile.this);
-                fAM.setOnItemSelectedListener(ClinicProfile.this);
-                fPM.setOnItemSelectedListener(ClinicProfile.this);
-                saAM.setOnItemSelectedListener(ClinicProfile.this);
-                saPM.setOnItemSelectedListener(ClinicProfile.this);
-                suAM.setOnItemSelectedListener(ClinicProfile.this);
-                suPM.setOnItemSelectedListener(ClinicProfile.this);
-
-
-                hBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //do nothing, override later
-                    }
-                });
-                hBuilder.setView(mView);
-                final AlertDialog dialog = hBuilder.create();
-                dialog.show();
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String monA = String.valueOf(mAM.getSelectedItemPosition());
-                        String monP = String.valueOf(mPM.getSelectedItemPosition());
-                        String tueA = String.valueOf(tuAM.getSelectedItemPosition());
-                        String tueP = String.valueOf(tuPM.getSelectedItemPosition());
-                        String wedA = String.valueOf(wAM.getSelectedItemPosition());
-                        String wedP = String.valueOf(wPM.getSelectedItemPosition());
-                        String thuA = String.valueOf(thAM.getSelectedItemPosition());
-                        String thuP = String.valueOf(thPM.getSelectedItemPosition());
-                        String friA = String.valueOf(fAM.getSelectedItemPosition());
-                        String friP = String.valueOf(fPM.getSelectedItemPosition());
-                        String satA = String.valueOf(saAM.getSelectedItemPosition());
-                        String satP = String.valueOf(saPM.getSelectedItemPosition());
-                        String sunA = String.valueOf(suAM.getSelectedItemPosition());
-                        String sunP = String.valueOf(suPM.getSelectedItemPosition());
-                        String[] times = new String[]{monA, monP, tueA, tueP, wedA, wedP, thuA, thuP, friA, friP, satA, satP, sunA, sunP};
-                        if (hoursValid(times)){
-                            storedHours = times;
-                            flag = true;
-                            dialog.dismiss();
-                        }
-                    }
-                });
-            }
-        });
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String checkBools = createBoolStrings(checkedItems);
-                String checkints = createIntStrings(selectedItems);
-                String paymentsBools = createBoolStrings(checkedPayments);
-                String paymentints = createIntStrings(selectedPayments);
-                String servicesBools = createBoolStrings(checkedServices);
-                String servicesints = createIntStrings(selectedServices);
-                finalHours = "";
-                for (String s: storedHours){
-                    finalHours = finalHours + s + ", ";
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Cursor data = db.getExistingClinic(selectedClinic);
+            while (data.moveToNext()){
+                if (data.getString(1).equalsIgnoreCase(selectedClinic)){
+                    id = data.getInt(0);
+                    boolItems = data.getString(2);
+                    intItems = data.getString(3);
+                    boolPayments = data.getString(4);
+                    intPayments = data.getString(5);
+                    boolServices = data.getString(6);
+                    intServices = data.getString(7);
+                    hoursClinic = data.getString(8);
+                    storedPhone = data.getString(9);
+                    storedLat = data.getDouble(10);
+                    storedLong = data.getDouble(11);
                 }
-                if (valid()){
-                    db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours, phone.getText().toString().trim(), address.getText().toString().trim());
-                    Intent i = new Intent(ClinicProfile.this, Employee.class);
-                    i.putExtra("username", username);
-                    startActivity(i);
+            }
+            Cursor serviceData = db.getServiceData();
+            allServices = new ArrayList<>();
+            while (serviceData.moveToNext()){
+                allServices.add(serviceData.getString(1));
+            }
+            adminServices = new String[allServices.size()];
+            for (int i = 0; i < allServices.size(); i++){
+                adminServices[i] = allServices.get(i);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!storedPhone.equals("Phone")){
+                phone.setText(storedPhone);
+            }
+            if (storedLat != null && storedLong != null){
+                reverseGeoLocate();
+                if (list.size()>0){
+                    Address address = list.get(0);
+                    streetAddress.setText(address.getAddressLine(0));
+                    postalCode.setText(address.getPostalCode());
+                }
+            }
+            checkedServices = new boolean[allServices.size()];
+            storedHours = hoursClinic.split(", ");
+            checkedItems = updateBools(boolItems.split(", "), checkedItems, insuranceItems.length);
+            checkedPayments = updateBools(boolPayments.split(", "), checkedPayments, paymentItems.length);
+            checkedServices = updateBools(boolServices.split(", "), checkedServices, allServices.size());
+            selectedItems = updateInts(intItems.split(", "), selectedItems);
+            selectedPayments = updateInts(intPayments.split(", "), selectedPayments);
+            selectedServices = updateInts(intServices.split(", "), selectedServices);
+        }
+    }
+
+    public void insuranceClick(View view){
+        AlertDialog.Builder iBuilder = new AlertDialog.Builder(ClinicProfile.this);
+        iBuilder.setTitle(R.string.dialog_title);
+        iBuilder.setMultiChoiceItems(insuranceItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position, boolean isChecked) {
+                if (isChecked){
+                    if (!selectedItems.contains(position)){
+                        selectedItems.add(position);
+                    }
+                } else if (selectedItems.contains(position)){
+                    selectedItems.remove(selectedItems.indexOf(position));
                 }
             }
         });
+        iBuilder.setCancelable(false);
+        iBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String item = "";
+                for (int i = 0; i < selectedItems.size(); i++){
+                    item = item + insuranceItems[selectedItems.get(i)];
+                    if(i != selectedItems.size()-1){
+                        item = item + ", ";
+                    }
+                }
+            }
+        });
+        iBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        iBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < checkedItems.length; i++){
+                    checkedItems[i] = false;
+                    selectedItems.clear();
+                }
+            }
+        });
+        AlertDialog iDialog = iBuilder.create();
+        iDialog.show();
+    }
+
+    public void paymentClick(View view){
+        AlertDialog.Builder pBuilder = new AlertDialog.Builder(ClinicProfile.this);
+        pBuilder.setTitle("Payment Options");
+        pBuilder.setMultiChoiceItems(paymentItems, checkedPayments, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position, boolean isChecked) {
+                if (isChecked){
+                    if (!selectedPayments.contains(position)){
+                        selectedPayments.add(position);
+                    }
+                } else if (selectedPayments.contains(position)){
+                    selectedPayments.remove(selectedPayments.indexOf(position));
+                }
+            }
+        });
+        pBuilder.setCancelable(false);
+        pBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String item = "";
+                for (int i = 0; i < selectedPayments.size(); i++){
+                    item = item + paymentItems[selectedPayments.get(i)];
+                    if(i != selectedPayments.size()-1){
+                        item = item + ", ";
+                    }
+                }
+            }
+        });
+        pBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        pBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < checkedPayments.length; i++){
+                    checkedPayments[i] = false;
+                    selectedPayments.clear();
+                }
+            }
+        });
+        AlertDialog pDialog = pBuilder.create();
+        pDialog.show();
+    }
+
+    public void serviceClick(View view){
+        AlertDialog.Builder sBuilder = new AlertDialog.Builder(ClinicProfile.this);
+        sBuilder.setTitle("Available Services");
+        sBuilder.setMultiChoiceItems(adminServices, checkedServices, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position, boolean isChecked) {
+                if (isChecked){
+                    if (!selectedServices.contains(position)){
+                        selectedServices.add(position);
+                    }
+                } else if (selectedServices.contains(position)){
+                    selectedServices.remove(selectedServices.indexOf(position));
+                }
+            }
+        });
+        sBuilder.setCancelable(false);
+        sBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String item = "";
+                for (int i = 0; i < selectedServices.size(); i++){
+                    item = item + adminServices[selectedServices.get(i)];
+                    if(i != selectedServices.size()-1){
+                        item = item + ", ";
+                    }
+                }
+            }
+        });
+        sBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        sBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < checkedServices.length; i++){
+                    checkedPayments[i] = false;
+                    selectedServices.clear();
+                }
+            }
+        });
+        AlertDialog sDialog = sBuilder.create();
+        sDialog.show();
+    }
+
+    public void hoursClick(View view){
+        final AlertDialog.Builder hBuilder = new AlertDialog.Builder(ClinicProfile.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_hours, null);
+        final Spinner mAM = mView.findViewById(R.id.spinner2);
+        final Spinner mPM = mView.findViewById(R.id.spinner3);
+        final Spinner tuAM = mView.findViewById(R.id.spinner4);
+        final Spinner tuPM = mView.findViewById(R.id.spinner5);
+        final Spinner wAM = mView.findViewById(R.id.spinner6);
+        final Spinner wPM = mView.findViewById(R.id.spinner7);
+        final Spinner thAM = mView.findViewById(R.id.spinner8);
+        final Spinner thPM = mView.findViewById(R.id.spinner9);
+        final Spinner fAM = mView.findViewById(R.id.spinner10);
+        final Spinner fPM = mView.findViewById(R.id.spinner11);
+        final Spinner saAM = mView.findViewById(R.id.spinner12);
+        final Spinner saPM = mView.findViewById(R.id.spinner13);
+        final Spinner suAM = mView.findViewById(R.id.spinner14);
+        final Spinner suPM = mView.findViewById(R.id.spinner15);
+        Spinner[] spinners = {mAM, mPM, tuAM, tuPM, wAM, wPM, thAM, thPM, fAM, fPM, saAM, saPM, suAM, suPM};
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ClinicProfile.this, R.array.times, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        for (int i = 0; i < spinners.length; i++){
+            spinners[i].setAdapter(adapter);
+            spinners[i].setSelection(Integer.parseInt(storedHours[i]));
+            spinners[i].setOnItemSelectedListener(ClinicProfile.this);
+        }
+        hBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //do nothing, override later
+            }
+        });
+        hBuilder.setView(mView);
+        final AlertDialog dialog = hBuilder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String monA = String.valueOf(mAM.getSelectedItemPosition());
+                String monP = String.valueOf(mPM.getSelectedItemPosition());
+                String tueA = String.valueOf(tuAM.getSelectedItemPosition());
+                String tueP = String.valueOf(tuPM.getSelectedItemPosition());
+                String wedA = String.valueOf(wAM.getSelectedItemPosition());
+                String wedP = String.valueOf(wPM.getSelectedItemPosition());
+                String thuA = String.valueOf(thAM.getSelectedItemPosition());
+                String thuP = String.valueOf(thPM.getSelectedItemPosition());
+                String friA = String.valueOf(fAM.getSelectedItemPosition());
+                String friP = String.valueOf(fPM.getSelectedItemPosition());
+                String satA = String.valueOf(saAM.getSelectedItemPosition());
+                String satP = String.valueOf(saPM.getSelectedItemPosition());
+                String sunA = String.valueOf(suAM.getSelectedItemPosition());
+                String sunP = String.valueOf(suPM.getSelectedItemPosition());
+                String[] times = new String[]{monA, monP, tueA, tueP, wedA, wedP, thuA, thuP, friA, friP, satA, satP, sunA, sunP};
+                if (hoursValid(times)){
+                    storedHours = times;
+                    flag = true;
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
+    public void saveClick(View view){
+        if (isServicesOK()){
+            geoLocate();
+        }
+        String checkBools = createBoolStrings(checkedItems);
+        String checkints = createIntStrings(selectedItems);
+        String paymentsBools = createBoolStrings(checkedPayments);
+        String paymentints = createIntStrings(selectedPayments);
+        String servicesBools = createBoolStrings(checkedServices);
+        String servicesints = createIntStrings(selectedServices);
+        finalHours = "";
+        for (String s: storedHours){
+            finalHours = finalHours + s + ", ";
+        }
+        if (valid()){
+            Address address = list.get(0);
+            db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours, phone.getText().toString().trim(), address.getLatitude(), address.getLongitude());
+            Intent i = new Intent(ClinicProfile.this, Employee.class);
+            i.putExtra("username", username);
+            startActivity(i);
+        }
+    }
+
+    public void geoLocate(){
+        String addressString = streetAddress.getText().toString() + " " + postalCode.getText().toString();
+        Geocoder geocoder = new Geocoder(ClinicProfile.this);
+        try {
+            list = geocoder.getFromLocationName(addressString, 1);
+        } catch (IOException e){
+        }
+    }
+
+    public void reverseGeoLocate(){
+        Geocoder geocoder = new Geocoder(ClinicProfile.this);
+        try {
+            list = geocoder.getFromLocation(storedLat, storedLong, 1);
+        } catch (IOException e){
+        }
     }
 
     public boolean[] updateBools(String[] bools, boolean[] checked, int x){
@@ -466,6 +442,10 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public boolean valid(){
+        if (!(list.size() > 0)){
+            toastMessage("The address you entered could not be found. Please verify the address and try again.");
+            return false;
+        }
         if(!phone.getText().toString().trim().replace("-", "").matches("[0-9]+") || phone.getText().toString().trim().length() != 12){
             toastMessage("Please use only numbers in the XXX-XXX-XXXX format.");
             return false;
@@ -501,16 +481,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
-    }
-
-    private void init(){
-        address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ClinicProfile.this, MapActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public boolean isServicesOK(){

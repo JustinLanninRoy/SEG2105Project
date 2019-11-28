@@ -31,19 +31,35 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/editText6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Phone"
+                android:ems="10"
+                android:hint="Street Address"
                 android:inputType="textPersonName" />
 
-            <Button
-                android:id="@+id/button10"
+            <EditText
+                android:id="@+id/editText7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight=".77"
-                android:text="Address" />
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/txtEditPostalCode"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="207dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/txtEditPhoneNumber"
+                android:inputType="textPersonName" />
 
         </LinearLayout>
 
@@ -57,6 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="insuranceClick"
                 android:text="Accepted Insurances" />
 
             <Button
@@ -64,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.3"
+                android:onClick="paymentClick"
                 android:text="Accepted Payments" />
         </LinearLayout>
 
@@ -77,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="serviceClick"
                 android:text="Available Services" />
 
             <Button
@@ -84,6 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:onClick="hoursClick"
                 android:text="Clinic Hours" />
         </LinearLayout>
 
@@ -91,6 +111,7 @@
             android:id="@+id/button9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="saveClick"
             android:text="Save" />
 
     </LinearLayout>
