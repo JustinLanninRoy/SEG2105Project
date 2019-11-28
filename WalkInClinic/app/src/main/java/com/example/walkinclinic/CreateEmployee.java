@@ -102,12 +102,16 @@ public class CreateEmployee extends CreatePerson {
             Intent i = new Intent(this, ClinicProfile.class);
             i.putExtra("clinicName", clinic.getText().toString().trim());
             i.putExtra("username", user);
+            databaseHelper.close();
             startActivity(i);
+            CreateEmployee.this.finish();
         } else {
             Intent i = new Intent(this, PostLoggin.class);
             i.putExtra("message", postLogginString);
             i.putExtra("username", user);
+            databaseHelper.close();
             startActivity(i);
+            CreateEmployee.this.finish();
         }
         Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
     }

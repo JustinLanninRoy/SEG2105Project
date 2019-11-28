@@ -117,7 +117,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(SERVICESINT, "");
         contentValues.put(HOURS, times);
         contentValues.put(COL7, "Phone");
-
+        contentValues.put(LAT, 0.0);
+        contentValues.put(LONG, 0.0);
         long result = db.insert(TABLE_CLINIC, null, contentValues);
 
         if (result == -1){
@@ -150,7 +151,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void updateClinic(String name, String bools, String ints, String pbools, String pints, String sbools, String sints, String hours, String phone, double lati, double longi){
+    public void updateClinic(String name, String bools, String ints, String pbools, String pints, String sbools, String sints, String hours, String phone){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ICHECKED, bools);
@@ -161,9 +162,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(SERVICESINT, sints);
         contentValues.put(HOURS, hours);
         contentValues.put(COL7, phone);
-        contentValues.put(LAT, lati);
-        contentValues.put(LONG, longi);
         db.update(TABLE_CLINIC, contentValues, CLINIC +"=?", new String[]{name});
+    }
+
+    public void updateLatitue(String name, Double lati){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_CLINIC + " SET " + LAT + " = \"" + lati +
+                "\" WHERE " + CLINIC + " = \"" + name + "\" COLLATE NOCASE ";
+        db.execSQL(query);
+    }
+
+    public void updateLogitude(String name, Double longi){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_CLINIC + " SET " + LONG + " = \"" + longi +
+                "\" WHERE " + CLINIC + " = \"" + name + "\" COLLATE NOCASE ";
+        db.execSQL(query);
     }
 
     public void updateEmployeeHours(String username, String hours){

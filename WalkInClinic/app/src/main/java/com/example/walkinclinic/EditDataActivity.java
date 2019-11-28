@@ -82,6 +82,7 @@ public class EditDataActivity extends AppCompatActivity {
                 toastMessage("removed from database");
                 Intent i = new Intent(EditDataActivity.this, ListActivity.class);
                 i.putExtra("type", selectedType);
+                databaseHelper.close();
                 startActivity(i);
             }
         });

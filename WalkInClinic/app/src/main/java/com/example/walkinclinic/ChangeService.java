@@ -74,6 +74,7 @@ public class ChangeService extends AppCompatActivity {
 
                 databaseHelper.updateService(addition, iD, service + ": " + role);
                 Intent i = new Intent(ChangeService.this, Services.class);
+                databaseHelper.close();
                 startActivity(i);
             }
         });
@@ -89,6 +90,7 @@ public class ChangeService extends AppCompatActivity {
 
                 databaseHelper.deleteService(iD);
                 Intent i = new Intent(ChangeService.this, Services.class);
+                databaseHelper.close();
                 startActivity(i);
             }
         });

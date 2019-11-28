@@ -66,6 +66,7 @@ public class Services extends AppCompatActivity {
 
                 databaseHelper.addService(service + ": " + role);
                 Intent i = new Intent(Services.this, Services.class);
+                databaseHelper.close();
                 startActivity(i);
             }
         });
@@ -115,6 +116,7 @@ public class Services extends AppCompatActivity {
                 Intent x = new Intent(Services.this, ChangeService.class);
                 x.putExtra("id", selectedID);
                 x.putExtra("service", name);
+                databaseHelper.close();
                 startActivity(x);
             }
         });

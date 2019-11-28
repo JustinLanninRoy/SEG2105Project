@@ -62,6 +62,7 @@ public class ListActivity extends AppCompatActivity {
                 editScreenIntent.putExtra("id", Integer.parseInt(split[0]));
                 editScreenIntent.putExtra("name", name);
                 editScreenIntent.putExtra("type", "patient");
+                databaseHelper.close();
                 startActivity(editScreenIntent);
             }
         });
@@ -87,6 +88,7 @@ public class ListActivity extends AppCompatActivity {
                 Intent editScreenIntent = new Intent(ListActivity.this, EditDataActivity.class);
                 editScreenIntent.putExtra("id", Integer.parseInt(split[0]));
                 editScreenIntent.putExtra("type", "employee");
+                databaseHelper.close();
                 startActivity(editScreenIntent);
             }
         });

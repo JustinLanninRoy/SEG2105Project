@@ -59,6 +59,7 @@ public class ClinicList extends AppCompatActivity {
                     Intent editScreenIntent = new Intent(ClinicList.this, AdminsClinicProfile.class);
                     editScreenIntent.putExtra("id", itemID);
                     editScreenIntent.putExtra("name", name);
+                    databaseHelper.close();
                     startActivity(editScreenIntent);
                 } else {
                     toastMessage("No ID associated with that name");

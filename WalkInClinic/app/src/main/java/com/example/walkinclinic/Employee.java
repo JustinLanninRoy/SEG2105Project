@@ -74,7 +74,9 @@ public class Employee extends AppCompatActivity implements AdapterView.OnItemSel
         Intent i = new Intent(this, ClinicProfile.class);
         i.putExtra("clinicName", clinicName);
         i.putExtra("username", username);
+        db.close();
         startActivity(i);
+        Employee.this.finish();
     }
 
     public void myHours(View view){

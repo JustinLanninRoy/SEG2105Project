@@ -28,11 +28,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+current errors:
+I/Choreographer: Skipped 301 frames!  The application may be doing too much work on its main thread.
+I/OpenGLRenderer: Davey! duration=5043ms; Flags=0, IntendedVsync=3517029319584, Vsync=3522045986050
+W/System: A resource failed to call close.
+I/AssistStructure: Flattened final assist data: 1600 bytes, containing 1 windows, 7 views
+ */
+
 public class ClinicProfile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView title;
     EditText phone;
-    EditText streetAddress;
-    EditText postalCode;
     String boolItems = "";
     String intItems = "";
     String boolPayments = "";
@@ -58,9 +64,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
     String finalHours;
     String[] storedHours;
     Boolean flag = false;
-    List<Address> list;
-    Double storedLat;
-    Double storedLong;
     String[] adminServices;
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
@@ -72,8 +75,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_clinic_profile);
         title = findViewById(R.id.textView11);
         phone = findViewById(R.id.editText);
-        streetAddress = findViewById(R.id.editText6);
-        postalCode = findViewById(R.id.editText7);
         Intent received = getIntent();
         selectedClinic = received.getStringExtra("clinicName");
         username = received.getStringExtra("username");
@@ -81,7 +82,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
         paymentItems = getResources().getStringArray(R.array.payment_types);
         checkedItems = new boolean[insuranceItems.length];
         checkedPayments = new boolean[paymentItems.length];
-        list = new ArrayList<>();
         db = new DatabaseHelper(this);
         title.setText("Clinic: " + selectedClinic);
         new LongRunningTask().execute();
@@ -103,8 +103,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
                     intServices = data.getString(7);
                     hoursClinic = data.getString(8);
                     storedPhone = data.getString(9);
-                    storedLat = data.getDouble(10);
-                    storedLong = data.getDouble(11);
                 }
             }
             Cursor serviceData = db.getServiceData();
@@ -124,14 +122,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
             super.onPostExecute(aVoid);
             if (!storedPhone.equals("Phone")){
                 phone.setText(storedPhone);
-            }
-            if (storedLat != null && storedLong != null){
-                reverseGeoLocate();
-                if (list.size()>0){
-                    Address address = list.get(0);
-                    streetAddress.setText(address.getAddressLine(0));
-                    postalCode.setText(address.getPostalCode());
-                }
             }
             checkedServices = new boolean[allServices.size()];
             storedHours = hoursClinic.split(", ");
@@ -347,9 +337,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void saveClick(View view){
-        if (isServicesOK()){
-            geoLocate();
-        }
         String checkBools = createBoolStrings(checkedItems);
         String checkints = createIntStrings(selectedItems);
         String paymentsBools = createBoolStrings(checkedPayments);
@@ -361,28 +348,13 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
             finalHours = finalHours + s + ", ";
         }
         if (valid()){
-            Address address = list.get(0);
-            db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours, phone.getText().toString().trim(), address.getLatitude(), address.getLongitude());
-            Intent i = new Intent(ClinicProfile.this, Employee.class);
+            db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours, phone.getText().toString().trim());
+            Intent i = new Intent(ClinicProfile.this, AddressActivity.class);
             i.putExtra("username", username);
+            i.putExtra("clinicName", selectedClinic);
+            db.close();
             startActivity(i);
-        }
-    }
-
-    public void geoLocate(){
-        String addressString = streetAddress.getText().toString() + " " + postalCode.getText().toString();
-        Geocoder geocoder = new Geocoder(ClinicProfile.this);
-        try {
-            list = geocoder.getFromLocationName(addressString, 1);
-        } catch (IOException e){
-        }
-    }
-
-    public void reverseGeoLocate(){
-        Geocoder geocoder = new Geocoder(ClinicProfile.this);
-        try {
-            list = geocoder.getFromLocation(storedLat, storedLong, 1);
-        } catch (IOException e){
+            ClinicProfile.this.finish();
         }
     }
 
@@ -442,10 +414,6 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public boolean valid(){
-        if (!(list.size() > 0)){
-            toastMessage("The address you entered could not be found. Please verify the address and try again.");
-            return false;
-        }
         if(!phone.getText().toString().trim().replace("-", "").matches("[0-9]+") || phone.getText().toString().trim().length() != 12){
             toastMessage("Please use only numbers in the XXX-XXX-XXXX format.");
             return false;
@@ -481,18 +449,5 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
-    }
-
-    public boolean isServicesOK(){
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(ClinicProfile.this);
-        if (available == ConnectionResult.SUCCESS){
-            return true;
-        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(ClinicProfile.this, available, ERROR_DIALOG_REQUEST);
-            dialog.show();
-        } else {
-            toastMessage("Can't make map requests.");
-        }
-        return false;
     }
 }

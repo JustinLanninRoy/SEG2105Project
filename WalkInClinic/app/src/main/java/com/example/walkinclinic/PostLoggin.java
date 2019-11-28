@@ -32,7 +32,7 @@ public class PostLoggin extends AppCompatActivity {
         if (key.equals("Admin!")){
             Intent i = new Intent(this, Admin.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"Opening Admin Activity",Toast.LENGTH_LONG).show();
+            PostLoggin.this.finish();
         }
         if (key.equals("Employee")){
             Intent received = getIntent();
@@ -40,10 +40,12 @@ public class PostLoggin extends AppCompatActivity {
             Intent i = new Intent(this, Employee.class);
             i.putExtra("username", username);
             startActivity(i);
+            PostLoggin.this.finish();
         }
         if (key.equals("Patient")){
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
+            PostLoggin.this.finish();
         }
     }
 }

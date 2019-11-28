@@ -37,6 +37,7 @@ public class AdminsClinicProfile extends AppCompatActivity {
             public void onClick(View v) {
                 databaseHelper.deleteClinic(selectedID);
                 Intent i = new Intent(AdminsClinicProfile.this, ClinicList.class);
+                databaseHelper.close();
                 startActivity(i);
             }
         });

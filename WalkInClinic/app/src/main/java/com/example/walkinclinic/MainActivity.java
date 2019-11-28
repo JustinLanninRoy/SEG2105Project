@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(this, PostLoggin.class);
             i.putExtra("message", postLogginString);
             startActivity(i);
+            finish();
         } else {
             //give error warning to user
             Toast.makeText(getApplicationContext(),"Account login is currently under development. Currently you can only log in as admin.",Toast.LENGTH_LONG).show();
@@ -78,14 +79,13 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(this, CreatePatient.class);
             startActivity(i);
             Toast.makeText(getApplicationContext(),"New Patient Account",Toast.LENGTH_LONG).show();
-        }
-        if(type.equalsIgnoreCase("Admin")){
-            Toast.makeText(getApplicationContext(),"New Admin account cannot be made please select Patient or Employee before creating a new account",Toast.LENGTH_LONG).show();
+            MainActivity.this.finish();
         }
         if(type.equalsIgnoreCase( "Employee")){
             Intent i = new Intent(this, CreateEmployee.class);
             startActivity(i);
             Toast.makeText(getApplicationContext(),"New Employee Account",Toast.LENGTH_LONG).show();
+            MainActivity.this.finish();
         }
     }
 }

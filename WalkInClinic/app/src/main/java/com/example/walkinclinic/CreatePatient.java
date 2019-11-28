@@ -76,6 +76,7 @@ public class CreatePatient extends CreatePerson {
         //opening the PostLoggin class and sending the message with it
         Intent i = new Intent(this, PostLoggin.class);
         i.putExtra("message", postLogginString);
+        databaseHelper.close();
         startActivity(i);
         Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
     }
