@@ -127,7 +127,11 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
             storedHours = hoursClinic.split(", ");
             checkedItems = updateBools(boolItems.split(", "), checkedItems, insuranceItems.length);
             checkedPayments = updateBools(boolPayments.split(", "), checkedPayments, paymentItems.length);
-            checkedServices = updateBools(boolServices.split(", "), checkedServices, allServices.size());
+            if (!boolServices.isEmpty()){
+                checkedServices = updateBools(boolServices.split(", "), checkedServices, allServices.size());
+            } else {
+                checkedServices = new boolean[allServices.size()];
+            }
             selectedItems = updateInts(intItems.split(", "), selectedItems);
             selectedPayments = updateInts(intPayments.split(", "), selectedPayments);
             selectedServices = updateInts(intServices.split(", "), selectedServices);
@@ -266,7 +270,7 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for (int i = 0; i < checkedServices.length; i++){
-                    checkedPayments[i] = false;
+                    checkedServices[i] = false;
                     selectedServices.clear();
                 }
             }
@@ -360,7 +364,7 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
 
     public boolean[] updateBools(String[] bools, boolean[] checked, int x){
         for (int i = 0; i < x; i++){
-            if (bools[i].equalsIgnoreCase("true")){
+            if (!bools[i].isEmpty() && bools[i].equalsIgnoreCase("true")){
                 checked[i] = true;
             } else {
                 checked[i] = false;

@@ -12,8 +12,6 @@ public class AdminsClinicProfile extends AppCompatActivity {
     private String selectedClinic;
     private int selectedID;
     TextView clinicTitle;
-    TextView address;
-    TextView phone;
     Button delete;
     DatabaseHelper databaseHelper;
 
@@ -22,8 +20,6 @@ public class AdminsClinicProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admins_clinic);
         clinicTitle = findViewById(R.id.textView18);
-        address = findViewById(R.id.textView19);
-        phone = findViewById(R.id.textView20);
         delete = findViewById(R.id.button4);
         databaseHelper = new DatabaseHelper(this);
 

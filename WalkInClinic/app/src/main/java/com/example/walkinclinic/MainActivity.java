@@ -1,6 +1,8 @@
 package com.example.walkinclinic;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.database.Cursor;
 import android.os.Bundle;
 
 import android.content.Intent;
@@ -13,12 +15,14 @@ import java.lang.String;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
+    DatabaseHelper db;
+    String name = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        db = new DatabaseHelper(this);
     }
 
     public void onLoggin(View view){
@@ -33,28 +37,51 @@ public class MainActivity extends AppCompatActivity {
 
         int x = validateLogin(username, password);
         if(x == 1){
-            //creating the string
             String postLogginString = ("Welcome Admin! You are logged-in.");
-
-            //opening the PostLoggin class and sending the message with it
             Intent i = new Intent(this, PostLoggin.class);
             i.putExtra("message", postLogginString);
             startActivity(i);
-            finish();
+            db.close();
+        } else if (x == 2){
+            String postLogginString = ("Welcome Patient " + name + "! You are logged-in.");
+            Intent i = new Intent(this, PostLoggin.class);
+            i.putExtra("message", postLogginString);
+            i.putExtra("username", username);
+            startActivity(i);
+            db.close();
+        } else if (x == 3){
+            String postLogginString = ("Welcome Employee " + name + "! You are logged-in.");
+            Intent i = new Intent(this, PostLoggin.class);
+            i.putExtra("message", postLogginString);
+            i.putExtra("username", username);
+            startActivity(i);
+            db.close();
         } else {
-            //give error warning to user
-            Toast.makeText(getApplicationContext(),"Account login is currently under development. Currently you can only log in as admin.",Toast.LENGTH_LONG).show();
-
-            //forcefully input loggin for now
-            TextView setUsername = (TextView) findViewById(R.id.txtEditUsername);
-            setUsername.setText("admin");
-            TextView userPassword = (TextView) findViewById(R.id.txtEditPassword);
-            userPassword.setText("5T5ptQ");
+            Toast.makeText(getApplicationContext(),"Please enter your username & password correctly, or create a new account.",Toast.LENGTH_LONG).show();
         }
     }
 
     public int validateLogin(String username, String password){
-        if(username.equals("admin") && password.equals("5T5ptQ")){
+        Cursor employees = db.getEmployee(username);
+        Cursor patients = db.getPatient(username);
+        String exists = null;
+        String epassword = null;
+        String ppassword = null;
+        while (employees.moveToNext()){
+            exists = employees.getString(6);
+            epassword = employees.getString(7);
+            name = employees.getString(1);
+        }
+        while (patients.moveToNext()){
+            exists = patients.getString(7);
+            ppassword = patients.getString(8);
+            name = patients.getString(1);
+        }
+        if (exists != null && password.equals(epassword)){
+            return 3;
+        } else if (exists != null && password.equals(ppassword)){
+            return 2;
+        } else if(username.equals("admin") && password.equals("5T5ptQ")){
             return 1;
         } else {
             return 0;
@@ -79,13 +106,11 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(this, CreatePatient.class);
             startActivity(i);
             Toast.makeText(getApplicationContext(),"New Patient Account",Toast.LENGTH_LONG).show();
-            MainActivity.this.finish();
         }
         if(type.equalsIgnoreCase( "Employee")){
             Intent i = new Intent(this, CreateEmployee.class);
             startActivity(i);
             Toast.makeText(getApplicationContext(),"New Employee Account",Toast.LENGTH_LONG).show();
-            MainActivity.this.finish();
         }
     }
 }

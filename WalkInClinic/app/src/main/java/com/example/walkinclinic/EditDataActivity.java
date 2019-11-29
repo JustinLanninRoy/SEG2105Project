@@ -21,7 +21,6 @@ public class EditDataActivity extends AppCompatActivity {
     private TextView email;
     private TextView phone;
     private TextView username;
-    private TextView password;
 
     DatabaseHelper databaseHelper;
 
@@ -39,7 +38,6 @@ public class EditDataActivity extends AppCompatActivity {
         email = findViewById(R.id.textView6);
         phone = findViewById(R.id.textView7);
         username = findViewById(R.id.textView9);
-        password = findViewById(R.id.textView8);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -56,18 +54,16 @@ public class EditDataActivity extends AppCompatActivity {
                 email.setText("Email: " + data.getString(5));
                 phone.setText("Phone: " + data.getString(6));
                 username.setText("Username: " + data.getString(7));
-                password.setText("");
             }
         } else if (selectedType.equals("employee")){
             Cursor data = databaseHelper.getEmployee(selectedID);
             while (data.moveToNext()){
                 name.setText(data.getString(1) + " " + data.getString(2));
-                address.setText("Employee #: " + data.getString(3));
-                age.setText("Clinic: " + data.getString(4));
-                email.setText("Email: " + data.getString(5));
-                phone.setText("Phone: " + data.getString(6));
-                username.setText("Username: " + data.getString(7));
-                password.setText(data.getString(9));
+                address.setText("Clinic: " + data.getString(3));
+                age.setText("Email: " + data.getString(4));
+                email.setText("Phone: " + data.getString(5));
+                phone.setText("Username: " + data.getString(6));
+                username.setText("");
             }
         }
 

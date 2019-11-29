@@ -20,6 +20,7 @@ public class CreateEmployee extends CreatePerson {
     int x;
     String y;
     String checked;
+    EditText userName;
 
     DatabaseHelper databaseHelper;
 
@@ -30,6 +31,7 @@ public class CreateEmployee extends CreatePerson {
         y = "";
         setContentView(R.layout.activity_create_employee);
         clinic = findViewById(R.id.clinic);
+        userName = findViewById(R.id.username);
         databaseHelper = new DatabaseHelper(this);
     }
 
@@ -38,9 +40,11 @@ public class CreateEmployee extends CreatePerson {
     }
 
     public void onCreatePerson(View view) {
-        x = checkClinic();
-        if (x == 3){
+        if (checkUsername()){
+            toastMessage("This username already exists, please try a different one.");
+        } else if (x == 3){
             toastMessage("The clinic you entered has not been registered yet. Press Create Account again if you wish to create a new clinic profile.");
+            x = checkClinic();
         } else {
             super.onCreatePerson(view);
         }
@@ -89,6 +93,28 @@ public class CreateEmployee extends CreatePerson {
             }
         }
         return x;
+    }
+
+    boolean checkUsername(){
+        String user = userName.getText().toString().trim();
+        if (user.equalsIgnoreCase("admin")){
+            return true;
+        }
+        Cursor data1 = databaseHelper.getEmployee(user);
+        Cursor data2 = databaseHelper.getPatient(user);
+        String exists = null;
+        while (data1.moveToNext()){
+            exists = data1.getString(6);
+        }
+        while (data2.moveToNext()){
+            exists = data2.getString(7);
+        }
+        if (exists == null){
+            x = checkClinic();
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override

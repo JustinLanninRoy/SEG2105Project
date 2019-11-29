@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +54,6 @@ public class AddressActivity extends AppCompatActivity {
         db = new DatabaseHelper(this);
         title.setText("Clinic: " + selectedClinic);
         geocoder = new Geocoder(AddressActivity.this);
-        toastMessage(String.valueOf(geocoder.isPresent()));
 
         new LongRunningTask().execute();
     }
@@ -91,7 +91,7 @@ public class AddressActivity extends AppCompatActivity {
         try {
             list = geocoder.getFromLocationName(addressString, 1);
         } catch (IOException e){
-            toastMessage("The address you entered could not be found. Please verify the address and try again.");
+            toastMessage(e.getMessage());
         }
     }
 

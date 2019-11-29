@@ -43,7 +43,10 @@ public class PostLoggin extends AppCompatActivity {
             PostLoggin.this.finish();
         }
         if (key.equals("Patient")){
-            Intent i = new Intent(this, MainActivity.class);
+            Intent received = getIntent();
+            username = received.getStringExtra("username");
+            Intent i = new Intent(this, PatientActivity.class);
+            i.putExtra("username", username);
             startActivity(i);
             PostLoggin.this.finish();
         }

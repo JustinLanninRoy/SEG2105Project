@@ -36,10 +36,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String HOURS = "hours";
     private static final String LAT = "latitude";
     private static final String LONG = "longitude";
+    private static final String RATING = "rating";
+    private static final String WAITTIME = "waittime";
 
     private String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + COL4 + " TEXT, " + COL5 + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
     private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT, " + HOURS + " TEXT)";
-    private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT COLLATE NOCASE, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + PCHECKED + " TEXT, " + PSELECTED + " TEXT, " + SERVICESBOOL + " TEXT, " + SERVICESINT + " TEXT, " + HOURS + " TEXT, " + COL7 + " TEXT, " + LAT + " REAL, " + LONG + " REAL)";
+    private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT COLLATE NOCASE, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + PCHECKED + " TEXT, " + PSELECTED + " TEXT, " + SERVICESBOOL + " TEXT, " + SERVICESINT + " TEXT, " + HOURS + " TEXT, " + COL7 + " TEXT, " + LAT + " REAL, " + LONG + " REAL, " + RATING + " REAL, " + WAITTIME + " INT)";
     private String createTableC = "CREATE TABLE " + TABLE_SERVICES + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SERVICES + " TEXT)";
 
     public DatabaseHelper(Context context){
@@ -119,6 +121,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL7, "Phone");
         contentValues.put(LAT, 0.0);
         contentValues.put(LONG, 0.0);
+        contentValues.put(RATING, -1);
+        contentValues.put(WAITTIME, -1);
         long result = db.insert(TABLE_CLINIC, null, contentValues);
 
         if (result == -1){
@@ -175,6 +179,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void updateLogitude(String name, Double longi){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_CLINIC + " SET " + LONG + " = \"" + longi +
+                "\" WHERE " + CLINIC + " = \"" + name + "\" COLLATE NOCASE ";
+        db.execSQL(query);
+    }
+
+    public void updateWaitTime(String name, int time){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_CLINIC + " SET " + WAITTIME + " = \"" + time +
+                "\" WHERE " + CLINIC + " = \"" + name + "\" COLLATE NOCASE ";
+        db.execSQL(query);
+    }
+
+    public void updateRating(String name, float rating){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_CLINIC + " SET " + RATING + " = \"" + rating +
                 "\" WHERE " + CLINIC + " = \"" + name + "\" COLLATE NOCASE ";
         db.execSQL(query);
     }
@@ -238,6 +256,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getEmployee(String user){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_EMPLOYEE + " WHERE " + COL8 + " = \"" + user + "\"";
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
+    public Cursor getPatient(String user){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL8 + " = \"" + user + "\"";
         Cursor data = db.rawQuery(query, null);
         return data;
     }

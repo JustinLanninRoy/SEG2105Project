@@ -1,5 +1,6 @@
 package com.example.walkinclinic;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 import android.content.Intent;
@@ -17,6 +18,7 @@ public class CreatePatient extends CreatePerson {
     EditText a;
     EditText streetAddress;
     private static final String TAG = "CreatePatient";
+    EditText userName;
 
     DatabaseHelper databaseHelper;
 
@@ -27,6 +29,7 @@ public class CreatePatient extends CreatePerson {
         a = findViewById(R.id.Age);
         streetAddress = findViewById(R.id.StreetAddress);
         databaseHelper = new DatabaseHelper(this);
+        userName = findViewById(R.id.username);
     }
 
     private  void toastMessage(String message){
@@ -34,7 +37,11 @@ public class CreatePatient extends CreatePerson {
     }
 
     public void onCreatePerson(View view){
-        super.onCreatePerson(view);
+        if (checkUsername()){
+            toastMessage("This username already exists, please try a different one.");
+        } else {
+            super.onCreatePerson(view);
+        }
     }
 
     @Override
@@ -68,14 +75,34 @@ public class CreatePatient extends CreatePerson {
         }
     }
 
+    boolean checkUsername(){
+        String user = userName.getText().toString().trim();
+        Cursor data1 = databaseHelper.getEmployee(user);
+        Cursor data2 = databaseHelper.getPatient(user);
+        String exists = null;
+        while (data1.moveToNext()){
+            exists = data1.getString(6);
+        }
+        while (data2.moveToNext()){
+            exists = data2.getString(7);
+        }
+        if (exists == null){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     @Override
     void openPostLoggin() {
         addPatient();
         //creating the string
         String postLogginString = ("Welcome Patient " + firstName.getText().toString() + "! You are logged-in.");
+        String user = userName.getText().toString().trim();
         //opening the PostLoggin class and sending the message with it
         Intent i = new Intent(this, PostLoggin.class);
         i.putExtra("message", postLogginString);
+        i.putExtra("username", user);
         databaseHelper.close();
         startActivity(i);
         Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
