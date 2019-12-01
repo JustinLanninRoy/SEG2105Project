@@ -6,13 +6,17 @@ import static org.junit.Assert.*;
 
 public class MainActivityTest {
 
+    //do tests for several cases
     @Test
-    public void validateLogin() {
-        String username = "admin";
-        String password = "5T5ptQ";
-        int expected = 1;
+    public void valid() {
+        String exists = "john123";
+        String username = "john123";
+        String password = "bjdkfuwi";
+        String epassword = null;
+        String ppassword = "bjdkfuwi";
+        int expected = 2;
         MainActivity mainActivity = new MainActivity();
-        int output = mainActivity.validateLogin(username, password);
+        int output = mainActivity.valid(exists, username, password, epassword, ppassword);
         assertEquals(expected, output);
     }
 }

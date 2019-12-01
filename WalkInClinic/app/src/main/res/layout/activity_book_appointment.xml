@@ -19,8 +19,9 @@
             android:id="@+id/textView41"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:text="TextView"
-            android:textColor="#000000"
+            android:textColor="#A4CA4C"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -34,6 +35,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="pickTime"
-            android:text="Next" />
+            android:text="Request Appointment" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

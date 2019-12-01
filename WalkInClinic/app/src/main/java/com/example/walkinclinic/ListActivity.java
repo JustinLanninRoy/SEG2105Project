@@ -64,6 +64,7 @@ public class ListActivity extends AppCompatActivity {
                 editScreenIntent.putExtra("type", "patient");
                 databaseHelper.close();
                 startActivity(editScreenIntent);
+                ListActivity.this.finish();
             }
         });
     }
@@ -90,6 +91,7 @@ public class ListActivity extends AppCompatActivity {
                 editScreenIntent.putExtra("type", "employee");
                 databaseHelper.close();
                 startActivity(editScreenIntent);
+                ListActivity.this.finish();
             }
         });
     }

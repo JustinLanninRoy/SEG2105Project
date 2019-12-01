@@ -16,8 +16,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.location.Location;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 
 public class ClinicSearchResults extends AppCompatActivity {
@@ -53,7 +51,7 @@ public class ClinicSearchResults extends AppCompatActivity {
         db = new DatabaseHelper(this);
         Cursor data = db.getClinicData();
         int numsRows = data.getCount();
-        if (numsRows == 0){
+        if (noClinicsStored(numsRows)){
             toastMessage("No clinics stored.");
         } else {
             while (data.moveToNext()){
@@ -96,6 +94,14 @@ public class ClinicSearchResults extends AppCompatActivity {
                 }
             }
             populateListView();
+        }
+    }
+
+    public boolean noClinicsStored(int rows){
+        if (rows == 0){
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -146,7 +152,9 @@ public class ClinicSearchResults extends AppCompatActivity {
                             if (selected.equals("Book Appointment")){
                                 Intent i = new Intent(ClinicSearchResults.this, BookAppointment.class);
                                 i.putExtra("username", username);
+                                i.putExtra("clinic", clinicName);
                                 startActivity(i);
+                                ClinicSearchResults.this.finish();
                             }
                             if (selected.equals("Check In")){
                                 Cursor data = db.getExistingClinic(clinicName);
@@ -163,13 +171,14 @@ public class ClinicSearchResults extends AppCompatActivity {
                                 Intent i = new Intent(ClinicSearchResults.this, PatientActivity.class);
                                 i.putExtra("username", username);
                                 startActivity(i);
+                                ClinicSearchResults.this.finish();
                             }
                             if (selected.equals("Rate Clinic")){
                                 Intent i = new Intent(ClinicSearchResults.this, RateClinic.class);
                                 i.putExtra("username", username);
                                 i.putExtra("clinicName", clinicName);
                                 startActivity(i);
-                                //new rating window, back to search input
+                                ClinicSearchResults.this.finish();
                             }
                             dialog.dismiss();
                         }

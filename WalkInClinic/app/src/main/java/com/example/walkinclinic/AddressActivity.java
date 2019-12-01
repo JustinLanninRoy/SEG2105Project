@@ -36,6 +36,7 @@ public class AddressActivity extends AppCompatActivity {
     Double storedLong;
     List<Address> list = new ArrayList<>();
     Geocoder geocoder;
+    boolean flag = false;
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
@@ -91,7 +92,13 @@ public class AddressActivity extends AppCompatActivity {
         try {
             list = geocoder.getFromLocationName(addressString, 1);
         } catch (IOException e){
-            toastMessage(e.getMessage());
+            if (e.getMessage().equals("grpc failed")){
+                toastMessage("Could not find address due to poor network connection. Try again later.");
+                flag = true;
+            } else {
+                toastMessage("Could not find address");
+            }
+
         }
     }
 
@@ -114,10 +121,16 @@ public class AddressActivity extends AppCompatActivity {
             db.close();
             startActivity(i);
             AddressActivity.this.finish();
+        } else if (flag){
+            Intent i = new Intent(AddressActivity.this, Employee.class);
+            i.putExtra("username", username);
+            db.close();
+            startActivity(i);
+            AddressActivity.this.finish();
         }
     }
 
     private void toastMessage(String message){
-        Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message,Toast.LENGTH_LONG).show();
     }
 }

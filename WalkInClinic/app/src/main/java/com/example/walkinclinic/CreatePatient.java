@@ -4,15 +4,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 public class CreatePatient extends CreatePerson {
     EditText a;
@@ -94,18 +88,18 @@ public class CreatePatient extends CreatePerson {
     }
 
     @Override
-    void openPostLoggin() {
+    void openPostLogin() {
         addPatient();
         //creating the string
         String postLogginString = ("Welcome Patient " + firstName.getText().toString() + "! You are logged-in.");
         String user = userName.getText().toString().trim();
         //opening the PostLoggin class and sending the message with it
-        Intent i = new Intent(this, PostLoggin.class);
+        Intent i = new Intent(this, PostLogin.class);
         i.putExtra("message", postLogginString);
         i.putExtra("username", user);
         databaseHelper.close();
         startActivity(i);
-        Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
+        CreatePatient.this.finish();
     }
 
     private void addPatient() {
@@ -117,12 +111,7 @@ public class CreatePatient extends CreatePerson {
         String phone = Phone.getText().toString().trim();
         String user = userName.getText().toString().trim();
         String password = userPassword.getText().toString().trim();
-        boolean insertData = databaseHelper.addData(fName, lName, address, age, email, phone, user, password);
-        if (insertData){
-            toastMessage("Data Successfully Inserted");
-        } else {
-            toastMessage("Something went wrong");
-        }
+        databaseHelper.addData(fName, lName, address, age, email, phone, user, password);
     }
 
 }

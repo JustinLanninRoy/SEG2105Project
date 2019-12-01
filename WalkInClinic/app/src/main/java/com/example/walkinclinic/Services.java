@@ -68,6 +68,7 @@ public class Services extends AppCompatActivity {
                 Intent i = new Intent(Services.this, Services.class);
                 databaseHelper.close();
                 startActivity(i);
+                Services.this.finish();
             }
         });
 
@@ -118,6 +119,7 @@ public class Services extends AppCompatActivity {
                 x.putExtra("service", name);
                 databaseHelper.close();
                 startActivity(x);
+                Services.this.finish();
             }
         });
     }

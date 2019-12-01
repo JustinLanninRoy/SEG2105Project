@@ -10,15 +10,16 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="Clinic's Working Hours"
-        android:textColor="#000000"
-        android:textSize="24sp" />
+        android:textColor="#A4CA4C"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView22"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Please specify your clinic's working hours. If there is a day where your clinic is closed, please enter * for both time slots that day." />
+        android:text="Please specify your clinic's working hours. If there is a day where your clinic is closed, select 'Closed' for both time slots." />
 
     <TableLayout
         android:layout_width="match_parent"

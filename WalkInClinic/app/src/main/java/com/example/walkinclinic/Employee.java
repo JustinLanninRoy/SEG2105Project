@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class Employee extends AppCompatActivity implements AdapterView.OnItemSel
     TextView phone;
     TextView user;
     TextView clinic;
+    ImageView logout;
     Button edit;
     String username;
     DatabaseHelper db;
@@ -41,6 +43,7 @@ public class Employee extends AppCompatActivity implements AdapterView.OnItemSel
         user = findViewById(R.id.username2);
         clinic = findViewById(R.id.clinicName);
         edit = findViewById(R.id.clinicProfile);
+        logout = findViewById(R.id.imageView7);
         db = new DatabaseHelper(this);
 
         Intent received = getIntent();
@@ -76,7 +79,6 @@ public class Employee extends AppCompatActivity implements AdapterView.OnItemSel
         i.putExtra("username", username);
         db.close();
         startActivity(i);
-        Employee.this.finish();
     }
 
     public void myHours(View view){
@@ -96,6 +98,11 @@ public class Employee extends AppCompatActivity implements AdapterView.OnItemSel
         final Spinner saPM = mView.findViewById(R.id.spinner13);
         final Spinner suAM = mView.findViewById(R.id.spinner14);
         final Spinner suPM = mView.findViewById(R.id.spinner15);
+
+        TextView title = mView.findViewById(R.id.textView12);
+        TextView instructions = mView.findViewById(R.id.textView22);
+        title.setText("My Working Hours");
+        instructions.setText("Specify your own working hours.");
 
         Spinner[] spinners = new Spinner[]{mAM, mPM, tuAM, tuPM, wAM, wPM, thAM, thPM, fAM, fPM, saAM, saPM, suAM, suPM};
         final String[] hoursList = clinicHours.split(", ");
@@ -118,22 +125,8 @@ public class Employee extends AppCompatActivity implements AdapterView.OnItemSel
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, swag);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinners[i].setAdapter(adapter);
+            spinners[i].setOnItemSelectedListener(Employee.this);
         }
-
-        mAM.setOnItemSelectedListener(Employee.this);
-        mPM.setOnItemSelectedListener(Employee.this);
-        tuAM.setOnItemSelectedListener(Employee.this);
-        tuPM.setOnItemSelectedListener(Employee.this);
-        wAM.setOnItemSelectedListener(Employee.this);
-        wPM.setOnItemSelectedListener(Employee.this);
-        thAM.setOnItemSelectedListener(Employee.this);
-        thPM.setOnItemSelectedListener(Employee.this);
-        fAM.setOnItemSelectedListener(Employee.this);
-        fPM.setOnItemSelectedListener(Employee.this);
-        saAM.setOnItemSelectedListener(Employee.this);
-        saPM.setOnItemSelectedListener(Employee.this);
-        suAM.setOnItemSelectedListener(Employee.this);
-        suPM.setOnItemSelectedListener(Employee.this);
 
         String[] specificHours = hours.split(", ");
         for (int i = 0; i < 14; i++){
@@ -184,7 +177,10 @@ public class Employee extends AppCompatActivity implements AdapterView.OnItemSel
 
     }
 
-    private void toastMessage(String message){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    public void logOut(View view){
+        logout.setBackgroundResource(R.drawable.common_google_signin_btn_icon_dark_normal_background);
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        Employee.this.finish();
     }
 }

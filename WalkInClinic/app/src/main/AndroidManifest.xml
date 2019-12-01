@@ -31,7 +31,6 @@
 
         <uses-library android:name="com.google.android.maps" />
 
-        <activity android:name=".EmployeesHours" />
         <activity android:name=".ClinicProfile" />
         <activity android:name=".Employee" />
         <activity android:name=".AdminsClinicProfile" />
@@ -41,7 +40,7 @@
         <activity android:name=".ClinicList" />
         <activity android:name=".DatabaseHelper" />
         <activity android:name=".Admin" />
-        <activity android:name=".PostLoggin" />
+        <activity android:name=".PostLogin" />
         <activity android:name=".CreatePatient" />
         <activity android:name=".CreateEmployee" />
         <activity android:name=".AddressActivity" />

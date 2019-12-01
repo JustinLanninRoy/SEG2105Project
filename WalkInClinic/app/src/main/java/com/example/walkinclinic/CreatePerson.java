@@ -8,9 +8,6 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public abstract class CreatePerson extends AppCompatActivity{
@@ -54,18 +51,17 @@ public abstract class CreatePerson extends AppCompatActivity{
 
         //open the postlogin class and display the correct message
         else {
-            openPostLoggin();
+            openPostLogin();
         }
     }
 
-    void openPostLoggin() {
+    void openPostLogin() {
         //creating the string
         String postLogginString = ("Welcome " + firstName.getText().toString() + "! You are logged-in.");
         //opening the PostLoggin class and sending the message with it
-        Intent i = new Intent(this, PostLoggin.class);
+        Intent i = new Intent(this, PostLogin.class);
         i.putExtra("message", postLogginString);
         startActivity(i);
-        Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
     }
 
     boolean checkEmailValid(EditText text){

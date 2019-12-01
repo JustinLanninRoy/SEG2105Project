@@ -26,7 +26,7 @@ public class AdminsClinicProfile extends AppCompatActivity {
         Intent received = getIntent();
         selectedID = received.getIntExtra("id", -1);
         selectedClinic = received.getStringExtra("name");
-        clinicTitle.setText(selectedClinic);
+        clinicTitle.setText("Clinic: " + selectedClinic);
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +35,7 @@ public class AdminsClinicProfile extends AppCompatActivity {
                 Intent i = new Intent(AdminsClinicProfile.this, ClinicList.class);
                 databaseHelper.close();
                 startActivity(i);
+                AdminsClinicProfile.this.finish();
             }
         });
     }

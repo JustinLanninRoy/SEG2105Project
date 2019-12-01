@@ -3,12 +3,9 @@ package com.example.walkinclinic;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -20,25 +17,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.maps.model.LatLng;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
-/*
-current errors:
-I/Choreographer: Skipped 301 frames!  The application may be doing too much work on its main thread.
-I/OpenGLRenderer: Davey! duration=5043ms; Flags=0, IntendedVsync=3517029319584, Vsync=3522045986050
-W/System: A resource failed to call close.
-I/AssistStructure: Flattened final assist data: 1600 bytes, containing 1 windows, 7 views
- */
 
 public class ClinicProfile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView title;
     EditText phone;
+    Button next;
     String boolItems = "";
     String intItems = "";
     String boolPayments = "";
@@ -75,6 +59,7 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_clinic_profile);
         title = findViewById(R.id.textView11);
         phone = findViewById(R.id.editText);
+        next = findViewById(R.id.button9);
         Intent received = getIntent();
         selectedClinic = received.getStringExtra("clinicName");
         username = received.getStringExtra("username");
@@ -331,16 +316,20 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
                 String sunA = String.valueOf(suAM.getSelectedItemPosition());
                 String sunP = String.valueOf(suPM.getSelectedItemPosition());
                 String[] times = new String[]{monA, monP, tueA, tueP, wedA, wedP, thuA, thuP, friA, friP, satA, satP, sunA, sunP};
-                if (hoursValid(times)){
+                int x = hoursValid(times);
+                if (x == 0){
                     storedHours = times;
                     flag = true;
                     dialog.dismiss();
+                } else {
+                    toastMessage("If there are days the clinic is closed, please select 'Closed' for BOTH time slots.");
                 }
             }
         });
     }
 
     public void saveClick(View view){
+        next.setBackgroundResource(R.drawable.common_google_signin_btn_icon_dark_normal_background);
         String checkBools = createBoolStrings(checkedItems);
         String checkints = createIntStrings(selectedItems);
         String paymentsBools = createBoolStrings(checkedPayments);
@@ -351,20 +340,40 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
         for (String s: storedHours){
             finalHours = finalHours + s + ", ";
         }
-        if (valid()){
-            db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours, phone.getText().toString().trim());
-            Intent i = new Intent(ClinicProfile.this, AddressActivity.class);
-            i.putExtra("username", username);
-            i.putExtra("clinicName", selectedClinic);
-            db.close();
-            startActivity(i);
-            ClinicProfile.this.finish();
+        switch (valid(phone.getText().toString().trim(), selectedItems.size(), selectedPayments.size(), allServices.size(), selectedServices.size())){
+            case 0:
+                db.updateClinic(selectedClinic, checkBools, checkints, paymentsBools, paymentints, servicesBools, servicesints, finalHours, phone.getText().toString().trim());
+                Intent i = new Intent(ClinicProfile.this, AddressActivity.class);
+                i.putExtra("username", username);
+                i.putExtra("clinicName", selectedClinic);
+                db.close();
+                startActivity(i);
+                ClinicProfile.this.finish();
+                break;
+            case 1:
+                toastMessage("Please use only numbers in the XXX-XXX-XXXX format.");
+                break;
+            case 2:
+                toastMessage("Please select at least one insurance company that your clinic accepts.");
+                break;
+            case 3:
+                toastMessage("Please select at least one payment method that your clinic accepts.");
+                break;
+            case 4:
+                toastMessage("Please select at least one service that your clinic offers.");
+                break;
+            case 5:
+                toastMessage("Please verify your clinic's hours are correct.");
+                break;
+            default:
+                toastMessage("Something went wrong during verification.");
         }
+        next.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light_normal_background);
     }
 
     public boolean[] updateBools(String[] bools, boolean[] checked, int x){
         for (int i = 0; i < x; i++){
-            if (!bools[i].isEmpty() && bools[i].equalsIgnoreCase("true")){
+            if (i < bools.length && bools[i].equalsIgnoreCase("true")){
                 checked[i] = true;
             } else {
                 checked[i] = false;
@@ -382,23 +391,21 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
         return selected;
     }
 
-    public Boolean hoursValid(String[] times){
+    public int hoursValid(String[] times){
         for (int i = 0; i < times.length; i++){
             if (times[i].equals("0")){
                 if (i%2 == 0){
                     if (!times[i+1].equals("0")){
-                        toastMessage("If there are days the clinic is closed, please select 'Closed' for BOTH time slots.");
-                        return false;
+                        return 1;
                     }
                 } else {
                     if (!times[i-1].equals("0")){
-                        toastMessage("If there are days the clinic is closed, please select 'Closed' for BOTH time slots.");
-                        return false;
+                        return 1;
                     }
                 }
             }
         }
-        return true;
+        return 0;
     }
 
     public String createBoolStrings(boolean[] checked){
@@ -417,28 +424,23 @@ public class ClinicProfile extends AppCompatActivity implements AdapterView.OnIt
         return ret;
     }
 
-    public boolean valid(){
-        if(!phone.getText().toString().trim().replace("-", "").matches("[0-9]+") || phone.getText().toString().trim().length() != 12){
-            toastMessage("Please use only numbers in the XXX-XXX-XXXX format.");
-            return false;
+    public int valid(String phone, int itemSize, int paymentSize, int serviceSize1, int serviceSize2){
+        if(!phone.replace("-", "").matches("[0-9]+") || phone.length() != 12){
+            return 1;
         }
-        if (selectedItems.size() < 1){
-            toastMessage("Please select at least one insurance company that your clinic accepts.");
-            return false;
+        if (itemSize < 1){
+            return 2;
         }
-        if (selectedPayments.size() < 1){
-            toastMessage("Please select at least one payment method that your clinic accepts.");
-            return false;
+        if (paymentSize < 1){
+            return 3;
         }
-        if (allServices.size() > 0 && selectedServices.size() < 1){
-            toastMessage("Please select at least one service that your clinic offers.");
-            return false;
+        if (serviceSize1 > 0 && serviceSize2 < 1){
+            return 4;
         }
         if (!flag){
-            toastMessage("Please verify your clinic's hours are correct.");
-            return false;
+            return 5;
         }
-        return true;
+        return 0;
     }
 
     private void toastMessage(String message){

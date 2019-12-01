@@ -34,6 +34,11 @@ public class ClinicProfileTest {
 
     @Test
     public void hoursValid() {
+        ClinicProfile clinicProfile = new ClinicProfile();
+        String[] times = {"1","0","1","1"};
+        int expected = 1;
+        int output = clinicProfile.hoursValid(times);
+        assertEquals(expected, output);
     }
 
     @Test
@@ -59,5 +64,15 @@ public class ClinicProfileTest {
 
     @Test
     public void valid() {
+        ClinicProfile clinicProfile = new ClinicProfile();
+        clinicProfile.flag = true;
+        String phone = "000-000-0000";
+        int itemSize = 5;
+        int paymentSize = 2;
+        int serviceSize1 = 5;
+        int serviceSize2 = 0;
+        int expected = 4;
+        int output = clinicProfile.valid(phone, itemSize, paymentSize, serviceSize1, serviceSize2);
+        assertEquals(expected, output);
     }
 }

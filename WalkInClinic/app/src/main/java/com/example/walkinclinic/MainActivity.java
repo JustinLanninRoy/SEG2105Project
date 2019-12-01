@@ -38,20 +38,20 @@ public class MainActivity extends AppCompatActivity {
         int x = validateLogin(username, password);
         if(x == 1){
             String postLogginString = ("Welcome Admin! You are logged-in.");
-            Intent i = new Intent(this, PostLoggin.class);
+            Intent i = new Intent(this, PostLogin.class);
             i.putExtra("message", postLogginString);
             startActivity(i);
             db.close();
         } else if (x == 2){
             String postLogginString = ("Welcome Patient " + name + "! You are logged-in.");
-            Intent i = new Intent(this, PostLoggin.class);
+            Intent i = new Intent(this, PostLogin.class);
             i.putExtra("message", postLogginString);
             i.putExtra("username", username);
             startActivity(i);
             db.close();
         } else if (x == 3){
             String postLogginString = ("Welcome Employee " + name + "! You are logged-in.");
-            Intent i = new Intent(this, PostLoggin.class);
+            Intent i = new Intent(this, PostLogin.class);
             i.putExtra("message", postLogginString);
             i.putExtra("username", username);
             startActivity(i);
@@ -77,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
             ppassword = patients.getString(8);
             name = patients.getString(1);
         }
+        return valid(exists, username, password, epassword, ppassword);
+    }
+
+    public int valid(String exists, String username, String password, String epassword, String ppassword){
         if (exists != null && password.equals(epassword)){
             return 3;
         } else if (exists != null && password.equals(ppassword)){
@@ -105,12 +109,10 @@ public class MainActivity extends AppCompatActivity {
         if(type.equalsIgnoreCase("Patient")){
             Intent i = new Intent(this, CreatePatient.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"New Patient Account",Toast.LENGTH_LONG).show();
         }
         if(type.equalsIgnoreCase( "Employee")){
             Intent i = new Intent(this, CreateEmployee.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"New Employee Account",Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -16,6 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_EMPLOYEE = "employee_table";
     private static final String TABLE_CLINIC = "clinic_table";
     private static final String TABLE_SERVICES = "service_table";
+    private static final String TABLE_APPOINTMENTS = "appointment_requests";
     private static final String COL1 = "ID";
     private static final String COL2 = "fname";
     private static final String COL3 = "lname";
@@ -38,11 +39,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LONG = "longitude";
     private static final String RATING = "rating";
     private static final String WAITTIME = "waittime";
+    private static final String PATIENT = "patient_username";
+    private static final String DATE = "date_requested";
 
     private String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + COL4 + " TEXT, " + COL5 + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT)";
     private String createTableA = "CREATE TABLE " + TABLE_EMPLOYEE + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL2 + " TEXT, " + COL3 + " TEXT, " + CLINIC + " TEXT, " + COL6 + " TEXT, " + COL7 + " TEXT, " + COL8 + " TEXT, " + COL9 + " TEXT, " + HOURS + " TEXT)";
     private String createTableB = "CREATE TABLE " + TABLE_CLINIC + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CLINIC + " TEXT COLLATE NOCASE, " + ICHECKED + " TEXT, " + ISELECTED + " TEXT, " + PCHECKED + " TEXT, " + PSELECTED + " TEXT, " + SERVICESBOOL + " TEXT, " + SERVICESINT + " TEXT, " + HOURS + " TEXT, " + COL7 + " TEXT, " + LAT + " REAL, " + LONG + " REAL, " + RATING + " REAL, " + WAITTIME + " INT)";
     private String createTableC = "CREATE TABLE " + TABLE_SERVICES + " (" + COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SERVICES + " TEXT)";
+    private String createTableD = "CREATE TABLE " + TABLE_APPOINTMENTS + " (" + CLINIC + " TEXT, " + PATIENT + " TEXT, " + DATE + " TEXT)";
 
     public DatabaseHelper(Context context){
         super(context, TABLE_NAME, null, 1);
@@ -54,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableA);
         db.execSQL(createTableB);
         db.execSQL(createTableC);
+        db.execSQL(createTableD);
     }
 
     @Override
@@ -62,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_EMPLOYEE);
         db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_CLINIC);
         db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_SERVICES);
+        db.execSQL((String) "DROP IF TABLE EXISTS " + TABLE_APPOINTMENTS);
         onCreate(db);
     }
 
@@ -139,6 +145,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long result = db.insert(TABLE_SERVICES, null, contentValues);
 
+        if (result == -1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean addAppointment(String clinic, String patient, String date){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CLINIC, clinic);
+        contentValues.put(PATIENT, patient);
+        contentValues.put(DATE, date);
+        long result = db.insert(TABLE_APPOINTMENTS, null, contentValues);
         if (result == -1){
             return false;
         } else {

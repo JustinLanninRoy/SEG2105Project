@@ -75,11 +75,11 @@ public class EditDataActivity extends AppCompatActivity {
                 } else if (selectedType.equals("employee")){
                     databaseHelper.deleteNameA(selectedID);
                 }
-                toastMessage("removed from database");
                 Intent i = new Intent(EditDataActivity.this, ListActivity.class);
                 i.putExtra("type", selectedType);
                 databaseHelper.close();
                 startActivity(i);
+                EditDataActivity.this.finish();
             }
         });
     }

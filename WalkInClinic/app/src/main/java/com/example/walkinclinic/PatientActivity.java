@@ -39,6 +39,8 @@ public class PatientActivity extends AppCompatActivity implements AdapterView.On
     List<Address> list = new ArrayList<>();
     Geocoder geocoder;
     String username;
+    ImageView logout;
+    ImageView search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class PatientActivity extends AppCompatActivity implements AdapterView.On
         hour = findViewById(R.id.spinner17);
         ampm = findViewById(R.id.spinner18);
         distance = findViewById(R.id.spinner19);
+        logout = findViewById(R.id.imageView6);
+        search = findViewById(R.id.imageView2);
         db = new DatabaseHelper(this);
         geocoder = new Geocoder(PatientActivity.this);
 
@@ -84,6 +88,10 @@ public class PatientActivity extends AppCompatActivity implements AdapterView.On
         while (serviceData.moveToNext()){
             allServices.add(serviceData.getString(1));
         }
+        adminServices = generateServices();
+    }
+
+    public String[] generateServices(){
         adminServices = new String[allServices.size()];
         if (allServices.size() == 0){
             adminServices = null;
@@ -94,7 +102,7 @@ public class PatientActivity extends AppCompatActivity implements AdapterView.On
             }
             checkedServices = new boolean[adminServices.length];
         }
-
+        return adminServices;
     }
 
     public void selectServices(View view){
@@ -145,7 +153,9 @@ public class PatientActivity extends AppCompatActivity implements AdapterView.On
     }
 
     public void search(View view){
-        geoLocate();
+        search.setBackgroundResource(R.drawable.common_google_signin_btn_icon_dark_normal_background);
+        String addressString = streetAddress.getText().toString() + " " + postalCode.getText().toString();
+        geoLocate(addressString);
         Address address = null;
         if (list.size() > 0){
             address = list.get(0);
@@ -177,8 +187,8 @@ public class PatientActivity extends AppCompatActivity implements AdapterView.On
         startActivity(i);
     }
 
-    public void geoLocate(){
-        String addressString = streetAddress.getText().toString() + " " + postalCode.getText().toString();
+    //try testing
+    public void geoLocate(String addressString){
         try {
             list = geocoder.getFromLocationName(addressString, 1);
         } catch (IOException e){
@@ -197,5 +207,12 @@ public class PatientActivity extends AppCompatActivity implements AdapterView.On
     }
     private void toastMessage(String message){
         Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
+    }
+
+    public void logOut(View view){
+        logout.setBackgroundResource(R.drawable.common_google_signin_btn_icon_dark_normal_background);
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        PatientActivity.this.finish();
     }
 }

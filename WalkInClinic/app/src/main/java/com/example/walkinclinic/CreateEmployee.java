@@ -6,13 +6,7 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-
-import java.util.ArrayList;
 
 
 public class CreateEmployee extends CreatePerson {
@@ -40,11 +34,12 @@ public class CreateEmployee extends CreatePerson {
     }
 
     public void onCreatePerson(View view) {
+        String work = clinic.getText().toString().trim();
         if (checkUsername()){
             toastMessage("This username already exists, please try a different one.");
         } else if (x == 3){
             toastMessage("The clinic you entered has not been registered yet. Press Create Account again if you wish to create a new clinic profile.");
-            x = checkClinic();
+            x = checkClinic(work);
         } else {
             super.onCreatePerson(view);
         }
@@ -78,8 +73,8 @@ public class CreateEmployee extends CreatePerson {
         }
     }
 
-    int checkClinic(){
-        String work = clinic.getText().toString().trim();
+    //see if this can be tested
+    int checkClinic(String work){
         Cursor data = databaseHelper.getExistingClinic(work);
         if (work.equals(y)){
             x = 2;
@@ -97,6 +92,7 @@ public class CreateEmployee extends CreatePerson {
 
     boolean checkUsername(){
         String user = userName.getText().toString().trim();
+        String work = clinic.getText().toString().trim();
         if (user.equalsIgnoreCase("admin")){
             return true;
         }
@@ -110,7 +106,7 @@ public class CreateEmployee extends CreatePerson {
             exists = data2.getString(7);
         }
         if (exists == null){
-            x = checkClinic();
+            x = checkClinic(work);
             return false;
         } else {
             return true;
@@ -118,7 +114,7 @@ public class CreateEmployee extends CreatePerson {
     }
 
     @Override
-    void openPostLoggin() {
+    void openPostLogin() {
         addEmployee();
         //creating the string
         String postLogginString = ("Welcome Employee " + firstName.getText().toString() + "! You are logged-in.");
@@ -132,14 +128,13 @@ public class CreateEmployee extends CreatePerson {
             startActivity(i);
             CreateEmployee.this.finish();
         } else {
-            Intent i = new Intent(this, PostLoggin.class);
+            Intent i = new Intent(this, PostLogin.class);
             i.putExtra("message", postLogginString);
             i.putExtra("username", user);
             databaseHelper.close();
             startActivity(i);
             CreateEmployee.this.finish();
         }
-        Toast.makeText(getApplicationContext(),"Account Created",Toast.LENGTH_LONG).show();
     }
 
     private void addEmployee() {
